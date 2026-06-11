@@ -12,46 +12,52 @@ interface MovieSectionProps {
 
 const movieQuestions = [
   {
-    question: "Which movie follows Krish and Ananya's intercultural love story?",
-    options: ["OK Jaanu", "2 States", "Orange", "Fidaa"],
-    correct: 1,
+    question: "In '2 States', what cultures do Krish and Ananya come from?",
+    options: ["Tamil & Punjabi", "Telugu & Bengali", "Punjabi & Tamil", "Gujarati & Malayali"],
+    correct: 2,
     movie: "2 States",
   },
   {
-    question: "Which movie follows Adi and Tara's live-in relationship?",
-    options: ["OK Jaanu", "Majili", "Geetha Govindam", "Orange"],
+    question: "In 'OK Jaanu', what life decision do Adi and Tara struggle with?",
+    options: ["Marriage vs Career", "Moving abroad", "Long-distance relationship", "Family approval"],
     correct: 0,
     movie: "OK Jaanu",
   },
   {
-    question: "Which movie stars Naga Chaitanya and Samantha?",
-    options: ["Orange", "Majili", "Fidaa", "Bommarillu"],
+    question: "In 'Majili', what sport did Poorna (Naga Chaitanya) play professionally?",
+    options: ["Football", "Cricket", "Tennis", "Hockey"],
     correct: 1,
     movie: "Majili",
   },
   {
-    question: "Which movie stars Ram Charan and Genelia?",
-    options: ["Orange", "Arya", "Fidaa", "Love Story"],
-    correct: 0,
+    question: "In 'Orange', what does Ram decide to stop doing in relationships?",
+    options: ["Falling in love", "Telling lies", "Speaking to girls", "Making promises"],
+    correct: 2,
     movie: "Orange",
   },
   {
-    question: "Which movie features Bhanumathi and Varun?",
-    options: ["Fidaa", "Geetha Govindam", "OK Jaanu", "Majili"],
-    correct: 0,
+    question: "In 'Fidaa', where does Bhanumathi first meet Varun?",
+    options: ["College campus", "Village in Telangana", "Hospital", "Wedding"],
+    correct: 1,
     movie: "Fidaa",
   },
   {
-    question: "Which movie stars Vijay Deverakonda and Rashmika?",
-    options: ["Orange", "Geetha Govindam", "Majili", "Dear Comrade"],
-    correct: 1,
+    question: "In 'Geetha Govindam', what is Vijay's profession?",
+    options: ["Teacher", "Engineer", "Lecturer", "Doctor"],
+    correct: 2,
     movie: "Geetha Govindam",
   },
   {
-    question: "Which movie is famous for the song 'Rooba Rooba'?",
-    options: ["Fidaa", "Orange", "Majili", "Bommarillu"],
+    question: "In 'Dear Comrade', what issue does Bharat fight for?",
+    options: ["Women's rights", "Student politics", "Environmental justice", "Labor rights"],
+    correct: 2,
+    movie: "Dear Comrade",
+  },
+  {
+    question: "In 'Love Story', what is Revanth's family background?",
+    options: ["Wealthy industrialists", "Middle-class farmers", "Film industry", "Political family"],
     correct: 1,
-    movie: "Orange (Bonus)",
+    movie: "Love Story",
   },
 ];
 
@@ -208,7 +214,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
             Romantic <span style={{ color: '#C97B8A' }}>Cinema</span> Challenge
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
-            Match the romantic movies to collect all 7 tickets!
+            Match the romantic movies to collect all 8 tickets!
           </p>
         </ScrollReveal>
 
@@ -272,7 +278,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                   ))}
                 </div>
                 <p className="font-caveat text-lg" style={{ color: '#6B7280' }}>
-                  Collect 7 vintage cinema tickets by answering correctly
+                  Collect 8 vintage cinema tickets by answering correctly
                 </p>
               </div>
 

@@ -1,6 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Music, Headphones, Play, Pause, Check, Disc3, ListMusic, PenLine, Award, Sparkles } from 'lucide-react';
+import {
+  Music, Headphones, Check, Disc3,
+  Sparkles, Sun, Moon, Cloud, Heart, Coffee, Plane, Award
+} from 'lucide-react';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { Confetti } from '../components/CelebrationEffects';
 
@@ -10,262 +13,100 @@ interface MusicSectionProps {
   musicScore: number;
 }
 
-const playlist = [
-  { id: 1, title: 'Enna Sona', artist: 'Arijit Singh', mood: 'Golden Hour', note: 'Golden hour song', year: '2017' },
-  { id: 2, title: 'Zehnaseeb', artist: 'Chinmayi Sripada', mood: 'Warm Comfort', note: 'Comfort song', year: '2014' },
-  { id: 3, title: 'Mast Magan', artist: 'Arijit Singh', mood: 'Daydreaming', note: 'Feels like falling in love', year: '2014' },
-  { id: 4, title: 'Kabira Encore', artist: 'Arijit Singh', mood: 'Soulful Journey', note: 'Feels like a journey', year: '2013' },
-  { id: 5, title: 'Tera Hone Laga Hoon', artist: 'Arijit Singh', mood: 'Romantic Evening', note: 'Magical melody', year: '2009' },
-  { id: 6, title: 'Pee Loon', artist: 'Mohit Chauhan', mood: 'Late Night Vibes', note: 'Perfect for rain', year: '2010' },
-  { id: 7, title: 'Tum Se Hi', artist: 'Mohit Chauhan', mood: 'Nostalgia', note: 'Reminds of old times', year: '2009' },
-  { id: 8, title: 'Agar Tum Saath Ho', artist: 'Arijit Singh', mood: 'Emotional Depth', note: 'Tears and healing', year: '2015' },
+const songs = [
+  { id: 1, title: 'Enna Sona', artist: 'Arijit Singh', mood: 'Golden Hour', color: '#E6B98D' },
+  { id: 2, title: 'Zehnaseeb', artist: 'Chinmayi Sripada', mood: 'Warm Comfort', color: '#A7C4A0' },
+  { id: 3, title: 'Mast Magan', artist: 'Arijit Singh', mood: 'Daydreaming', color: '#B9AEDC' },
+  { id: 4, title: 'Kabira Encore', artist: 'Arijit Singh', mood: 'Soulful Journey', color: '#C97B8A' },
+  { id: 5, title: 'Tera Hone Laga Hoon', artist: 'Arijit Singh', mood: 'Romantic Evening', color: '#F5D6D6' },
+  { id: 6, title: 'Pee Loon', artist: 'Mohit Chauhan', mood: 'Late Night Vibes', color: '#1F2A44' },
+  { id: 7, title: 'Tum Se Hi', artist: 'Mohit Chauhan', mood: 'Nostalgia', color: '#E6DDD4' },
+  { id: 8, title: 'Agar Tum Saath Ho', artist: 'Arijit Singh', mood: 'Emotional Depth', color: '#A7C4A0' },
 ];
 
-const musicQuiz = [
-  {
-    question: "Which song is one of Gayatri's favorites?",
-    options: ["Enna Sona", "Kesariya", "Ghungroo", "Apna Bana Le"],
-    correct: 0,
-  },
-  {
-    question: "Which song contains the word 'Magan' in its title?",
-    options: ["Mast Magan", "Tum Se Hi", "Pee Loon", "Tera Hone Laga Hoon"],
-    correct: 0,
-  },
-  {
-    question: "Which song is often associated with journeys and nostalgia?",
-    options: ["Kabira Encore", "Ghungroo", "Channa Mereya", "Raabta"],
-    correct: 0,
-  },
-  {
-    question: "Which song has 'Sona' in its title?",
-    options: ["Enna Sona", "Tum Hi Ho", "Shayad", "Ilahi"],
-    correct: 0,
-  },
-  {
-    question: "Which of these songs is in Gayatri's playlist?",
-    options: ["Zehnaseeb", "Malang", "Deva Deva", "Besharam Rang"],
-    correct: 0,
-  },
+const moodCategories = [
+  { id: 'golden', name: 'Golden Hour', icon: Sun, color: '#E6B98D', description: 'Warm, happy vibes' },
+  { id: 'comfort', name: 'Warm Comfort', icon: Heart, color: '#A7C4A0', description: 'Safe and cozy' },
+  { id: 'dream', name: 'Daydreaming', icon: Cloud, color: '#B9AEDC', description: 'Lost in thoughts' },
+  { id: 'journey', name: 'Soulful Journey', icon: Plane, color: '#C97B8A', description: 'Adventure awaits' },
+  { id: 'romantic', name: 'Romantic Evening', icon: Moon, color: '#F5D6D6', description: 'Love in the air' },
+  { id: 'night', name: 'Late Night Vibes', icon: Coffee, color: '#1F2A44', description: 'Peaceful late hours' },
+  { id: 'nostalgia', name: 'Nostalgia', icon: Heart, color: '#E6DDD4', description: 'Treasured memories' },
+  { id: 'emotional', name: 'Emotional Depth', icon: Sparkles, color: '#A7C4A0', description: 'Deep feelings' },
 ];
 
-// Collectible Cassette Component
-function Cassette({ index }: { index: number }) {
-  return (
-    <motion.div
-      initial={{ scale: 0, rotate: -20 }}
-      animate={{ scale: 1, rotate: Math.random() * 10 - 5 }}
-      className="relative"
-    >
-      <div
-        className="rounded-md shadow-lg overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, #FFFDFC 0%, #F4EDE6 100%)',
-          border: '2px solid #C97B8A',
-          width: '80px',
-        }}
-      >
-        {/* Cassette body */}
-        <div className="p-2">
-          {/* Tape reels */}
-          <div className="flex justify-center gap-4 mb-2">
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ background: '#C97B8A', border: '2px solid #1F2A44' }}
-            />
-            <div
-              className="w-4 h-4 rounded-full"
-              style={{ background: '#C97B8A', border: '2px solid #1F2A44' }}
-            />
-          </div>
-          {/* Label */}
-          <div
-            className="text-center py-1 rounded"
-            style={{ background: '#FAF6F1' }}
-          >
-            <p className="font-inter text-xs font-bold" style={{ color: '#C97B8A' }}>
-              CASSETTE #{index + 1}
-            </p>
-          </div>
-        </div>
-        {/* Bottom stripe */}
-        <div className="h-2" style={{ background: '#C97B8A' }} />
-      </div>
-    </motion.div>
-  );
-}
-
-// Vinyl Record Component
-function VinylRecord({
-  song,
-  isPlaying,
-  isSelected,
-  onClick,
-}: {
-  song: typeof playlist[0];
-  isPlaying: boolean;
-  isSelected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <motion.div
-      onClick={onClick}
-      whileHover={{ scale: 1.05 }}
-      className="cursor-pointer relative"
-    >
-      <motion.div
-        animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
-        transition={{
-          duration: 3,
-          repeat: isPlaying ? Infinity : 0,
-          ease: 'linear',
-        }}
-        className="relative w-32 h-32 md:w-40 md:h-40 rounded-full shadow-2xl flex items-center justify-center"
-        style={{ background: '#1F1F1F' }}
-      >
-        {/* Grooves */}
-        {[...Array(8)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              width: `${(i + 1) * 12}%`,
-              height: `${(i + 1) * 12}%`,
-              border: '1px solid #333333',
-            }}
-          />
-        ))}
-
-        {/* Center label */}
-        <div
-          className="w-14 h-14 md:w-18 md:h-18 rounded-full flex items-center justify-center"
-          style={{
-            background: 'linear-gradient(135deg, #C97B8A 0%, #E8B4B8 100%)',
-            border: '3px solid #2A2A2A',
-          }}
-        >
-          <Music className="w-5 h-5 text-white" />
-        </div>
-
-        {/* Shine */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full pointer-events-none" />
-
-        {/* Selected indicator */}
-        {isSelected && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -bottom-2 -right-2 rounded-full p-1"
-            style={{ background: '#C8DCC6' }}
-          >
-            <Check className="w-4 h-4 text-white" />
-          </motion.div>
-        )}
-      </motion.div>
-
-      <p
-        className="font-playfair text-sm font-semibold mt-3 text-center"
-        style={{ color: isSelected ? '#C97B8A' : '#1F2A44' }}
-      >
-        {song.title}
-      </p>
-    </motion.div>
-  );
+// Simple hash function for consistent "correct" mood
+function getCorrectMood(songId: number): string {
+  const moodMap: Record<number, string> = {
+    1: 'golden',
+    2: 'comfort',
+    3: 'dream',
+    4: 'journey',
+    5: 'romantic',
+    6: 'night',
+    7: 'nostalgia',
+    8: 'emotional',
+  };
+  return moodMap[songId] || 'golden';
 }
 
 export default function MusicSection({ onComplete, updateScore, musicScore }: MusicSectionProps) {
-  const [selectedSong, setSelectedSong] = useState<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [phase, setPhase] = useState<'intro' | 'playlist' | 'matching' | 'results' | 'complete'>('intro');
   const [discoveredSongs, setDiscoveredSongs] = useState<Set<number>>(new Set());
-  const [phase, setPhase] = useState<'explore' | 'quiz' | 'results' | 'complete'>('explore');
-  const [currentQuizQuestion, setCurrentQuizQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [collectedCassettes, setCollectedCassettes] = useState<number[]>([]);
+  const [selectedSong, setSelectedSong] = useState<number | null>(null);
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [matchedSongs, setMatchedSongs] = useState<Set<number>>(new Set());
+  const [correctMatches, setCorrectMatches] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const handleSongSelect = (index: number) => {
-    setSelectedSong(index);
-    setIsPlaying(true);
+  const handleExplorePlaylist = () => {
+    setPhase('playlist');
   };
 
-  const handleStopSong = () => {
-    if (selectedSong !== null && isPlaying) {
-      const newDiscovered = new Set([...discoveredSongs, selectedSong]);
-      if (!discoveredSongs.has(selectedSong)) {
-        updateScore(5);
-      }
-      setDiscoveredSongs(newDiscovered);
-    }
-    setIsPlaying(false);
-  };
-
-  const handleStartQuiz = () => {
-    if (discoveredSongs.size >= 4) {
-      setPhase('quiz');
+  const handleSongSelect = (songId: number) => {
+    if (matchedSongs.has(songId)) return;
+    setSelectedSong(songId === selectedSong ? null : songId);
+    setSelectedMood(null);
+    if (!discoveredSongs.has(songId)) {
+      setDiscoveredSongs(prev => new Set([...prev, songId]));
+      updateScore(3);
     }
   };
 
-  const handleAnswer = (index: number) => {
-    if (selectedAnswer !== null) return;
+  const handleMoodSelect = (moodId: string) => {
+    if (selectedSong === null) return;
+    setSelectedMood(moodId);
+  };
 
-    setSelectedAnswer(index);
-    const correct = index === musicQuiz[currentQuizQuestion].correct;
+  const handleConfirmMatch = () => {
+    if (selectedSong === null || selectedMood === null) return;
 
-    if (correct) {
-      setCorrectAnswers(prev => prev + 1);
-      updateScore(5);
-      setCollectedCassettes(prev => [...prev, currentQuizQuestion]);
+    const isCorrect = getCorrectMood(selectedSong) === selectedMood;
+
+    if (isCorrect) {
+      setMatchedSongs(prev => new Set([...prev, selectedSong]));
+      setCorrectMatches(prev => prev + 1);
+      updateScore(3.5);
     }
 
+    // Show feedback briefly
     setTimeout(() => {
-      if (currentQuizQuestion < musicQuiz.length - 1) {
-        setCurrentQuizQuestion(prev => prev + 1);
-        setSelectedAnswer(null);
-      } else {
+      setSelectedSong(null);
+      setSelectedMood(null);
+
+      // Check if all songs are matched
+      if (matchedSongs.size + 1 >= songs.length) {
         setShowConfetti(true);
         setTimeout(() => {
           setPhase('results');
         }, 1000);
       }
-    }, 1200);
+    }, 800);
   };
 
   const handleContinue = () => {
     setPhase('complete');
     onComplete();
-  };
-
-  const allDiscovered = discoveredSongs.size >= 4;
-
-  const getOptionStyle = (index: number): React.CSSProperties => {
-    const base: React.CSSProperties = {
-      width: '100%',
-      padding: '12px 16px',
-      borderRadius: '10px',
-      textAlign: 'left',
-      fontFamily: 'Inter, sans-serif',
-      fontSize: '14px',
-      cursor: selectedAnswer === null ? 'pointer' : 'default',
-      transition: 'all 0.2s ease',
-      border: '2px solid transparent',
-      marginBottom: '8px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      background: '#FAF6F1',
-    };
-
-    if (selectedAnswer === null) {
-      return { ...base, borderColor: '#E6DDD4' };
-    }
-    if (index === musicQuiz[currentQuizQuestion].correct) {
-      return { ...base, background: '#D1FAE5', borderColor: '#6EE7B7', color: '#065F46' };
-    }
-    if (selectedAnswer === index) {
-      return { ...base, background: '#FEE2E2', borderColor: '#FCA5A5', color: '#991B1B' };
-    }
-    return { ...base, background: '#F9FAFB', borderColor: 'transparent', opacity: 0.6 };
   };
 
   return (
@@ -277,6 +118,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-40 h-40 rounded-full blur-3xl" style={{ background: '#C97B8A20' }} />
         <div className="absolute bottom-40 right-20 w-60 h-60 rounded-full blur-3xl" style={{ background: '#B9AEDC20' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full blur-3xl opacity-30" style={{ background: '#A7C4A0' }} />
       </div>
 
       <div className="max-w-6xl mx-auto">
@@ -286,7 +128,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
             initial={{ scale: 0, rotate: -180 }}
             whileInView={{ scale: 1, rotate: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6, type: 'spring' }}
             className="inline-flex items-center justify-center p-4 rounded-full mb-6"
             style={{ background: '#C8DCC650' }}
           >
@@ -300,7 +142,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
             The <span style={{ color: '#C97B8A' }}>Soundtrack</span> of Her Life
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
-            Explore the playlist journal, collect vinyl records, and test your music knowledge!
+            Explore the playlist and match songs to their perfect moods
           </p>
         </ScrollReveal>
 
@@ -319,305 +161,263 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
         </motion.div>
 
         <AnimatePresence mode="wait">
-          {phase === 'explore' && (
+          {phase === 'intro' && (
             <motion.div
-              key="explore"
+              key="intro"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="text-center"
+            >
+              <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md mx-auto mb-8" style={{ border: '3px solid #E6DDD4' }}>
+                <div className="flex justify-center mb-4">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+                    className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg"
+                    style={{ background: 'linear-gradient(135deg, #1F2A44 0%, #374151 100%)' }}
+                  >
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: '#C97B8A' }}>
+                      <Music className="w-6 h-6 text-white" />
+                    </div>
+                  </motion.div>
+                </div>
+
+                <h3 className="font-playfair text-xl font-semibold mb-4" style={{ color: '#1F2A44' }}>
+                  Gayatri's Playlist Journal
+                </h3>
+
+                <p className="font-cormorant text-lg mb-4" style={{ color: '#6B7280' }}>
+                  A handpicked collection of songs that tell stories of love, longing, and beautiful moments.
+                </p>
+
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <div className="flex items-center gap-1">
+                    <Disc3 className="w-4 h-4" style={{ color: '#C97B8A' }} />
+                    <span className="font-inter text-sm" style={{ color: '#6B7280' }}>8 Songs</span>
+                  </div>
+                  <div className="w-1 h-4" style={{ background: '#E6DDD4' }} />
+                  <div className="flex items-center gap-1">
+                    <Headphones className="w-4 h-4" style={{ color: '#C97B8A' }} />
+                    <span className="font-inter text-sm" style={{ color: '#6B7280' }}>8 Moods</span>
+                  </div>
+                </div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleExplorePlaylist}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  background: '#1F2A44',
+                  color: '#FAF6F1',
+                  border: 'none',
+                  borderRadius: '9999px',
+                  padding: '16px 36px',
+                  fontFamily: 'Inter, sans-serif',
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  boxShadow: '0px 10px 25px rgba(31,42,68,0.15)',
+                }}
+              >
+                <span>Open Playlist Journal</span>
+              </motion.button>
+            </motion.div>
+          )}
+
+          {phase === 'playlist' && (
+            <motion.div
+              key="playlist"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {/* Main Grid Layout */}
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                {/* Left Side - Playlist Journal */}
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="bg-white rounded-2xl p-6 shadow-xl relative"
-                  style={{ border: '3px solid #E6DDD4' }}
-                >
-                  {/* Washi tape decorations */}
-                  <div className="absolute -top-3 left-8 w-20 h-5 rounded-md" style={{ background: '#C97B8A', transform: 'rotate(-3deg)' }} />
-                  <div className="absolute -top-3 right-8 w-20 h-5 rounded-md" style={{ background: '#B9AEDC', transform: 'rotate(3deg)' }} />
+              {/* Playlist Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                {songs.map((song, index) => {
+                  const isSelected = selectedSong === song.id;
+                  const isMatched = matchedSongs.has(song.id);
+                  const isDiscovered = discoveredSongs.has(song.id);
 
-                  {/* Paper texture */}
-                  <div className="absolute inset-0 paper-texture opacity-20 rounded-2xl" />
+                  return (
+                    <motion.div
+                      key={song.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      whileHover={{ scale: 1.05 }}
+                      onClick={() => !isMatched && handleSongSelect(song.id)}
+                      className="bg-white rounded-xl p-5 shadow-lg cursor-pointer relative overflow-hidden"
+                      style={{
+                        border: `2px solid ${isSelected ? '#C97B8A' : isMatched ? '#A7C4A0' : '#E6DDD4'}`,
+                        transition: 'border-color 0.2s ease',
+                      }}
+                    >
+                      {isMatched && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute top-2 right-2 rounded-full p-1"
+                          style={{ background: '#A7C4A0' }}
+                        >
+                          <Check className="w-3 h-3 text-white" />
+                        </motion.div>
+                      )}
 
-                  <div className="relative">
-                    {/* Journal Header */}
-                    <div className="flex items-center gap-2 mb-4 pb-4" style={{ borderBottom: '2px dashed #E6DDD4' }}>
-                      <ListMusic className="w-5 h-5" style={{ color: '#C97B8A' }} />
-                      <h3 className="font-playfair text-xl font-semibold" style={{ color: '#1F2A44' }}>
-                        Gayatri's Playlist
-                      </h3>
-                    </div>
-
-                    {/* Playlist Entries */}
-                    <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-                      {playlist.map((song, index) => {
-                        const isDiscovered = discoveredSongs.has(index);
-                        return (
-                          <motion.div
-                            key={song.id}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                            onClick={() => handleSongSelect(index)}
-                            whileHover={{ scale: 1.02, x: 4 }}
-                            className={`p-3 rounded-lg cursor-pointer relative ${
-                              selectedSong === index ? 'ring-2 ring-offset-2 ring-scrapbook-rose' : ''
-                            }`}
-                            style={{
-                              background: isDiscovered ? '#C8DCC620' : selectedSong === index ? '#C97B8A20' : '#FAF6F1',
-                            }}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div
-                                className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                                style={{ background: isDiscovered ? '#C8DCC6' : '#E6DDD4' }}
-                              >
-                                {isDiscovered ? (
-                                  <Check className="w-4 h-4 text-white" />
-                                ) : selectedSong === index && isPlaying ? (
-                                  <motion.div
-                                    animate={{ scale: [1, 1.2, 1] }}
-                                    transition={{ duration: 0.5, repeat: Infinity }}
-                                  >
-                                    <Music className="w-4 h-4" style={{ color: '#C97B8A' }} />
-                                  </motion.div>
-                                ) : (
-                                  <span className="font-inter text-xs font-bold" style={{ color: '#6B7280' }}>
-                                    {index + 1}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-playfair text-sm font-semibold truncate" style={{ color: '#1F2A44' }}>
-                                  {song.title}
-                                </p>
-                                <p className="font-inter text-xs" style={{ color: '#6B7280' }}>
-                                  {song.artist}
-                                </p>
-                                {isDiscovered && (
-                                  <div className="flex items-center gap-1 mt-1">
-                                    <PenLine className="w-3 h-3" style={{ color: '#C97B8A' }} />
-                                    <p className="font-caveat text-sm italic" style={{ color: '#C97B8A' }}>
-                                      "{song.note}"
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Right Side - Vinyl Collection */}
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="relative"
-                >
-                  <div className="text-center mb-4">
-                    <h3 className="font-playfair text-lg font-semibold" style={{ color: '#1F2A44' }}>
-                      Vinyl Collection
-                    </h3>
-                    <p className="font-caveat text-sm" style={{ color: '#6B7280' }}>
-                      Click to play, discover songs!
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    {playlist.slice(0, 4).map((song, index) => (
-                      <VinylRecord
-                        key={song.id}
-                        song={song}
-                        isPlaying={selectedSong === index && isPlaying}
-                        isSelected={discoveredSongs.has(index)}
-                        onClick={() => handleSongSelect(index)}
-                      />
-                    ))}
-                  </div>
-
-                  {/* Now Playing Card */}
-                  <AnimatePresence>
-                    {selectedSong !== null && isPlaying && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                        className="mt-6 bg-white rounded-xl p-4 shadow-lg"
-                        style={{ border: '3px solid #C97B8A' }}
-                      >
-                        <p className="font-caveat text-lg text-center mb-2" style={{ color: '#C97B8A' }}>
-                          Now Playing
-                        </p>
-                        <h4 className="font-playfair text-xl font-semibold text-center" style={{ color: '#1F2A44' }}>
-                          {playlist[selectedSong].title}
-                        </h4>
-                        <p className="font-inter text-sm text-center mb-1" style={{ color: '#6B7280' }}>
-                          {playlist[selectedSong].artist}
-                        </p>
-                        <p className="font-caveat text-center mb-3" style={{ color: '#C97B8A' }}>
-                          Mood: {playlist[selectedSong].mood}
-                        </p>
-
-                        {/* Waveform */}
-                        <div className="flex justify-center gap-1 mb-3">
-                          {[...Array(20)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="w-1 rounded-full"
-                              style={{ background: '#C97B8A' }}
-                              animate={{ height: [10, 25 + Math.random() * 20, 10] }}
-                              transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.05 }}
-                            />
-                          ))}
+                      <div className="flex flex-col items-center text-center">
+                        <div className="w-14 h-14 rounded-full flex items-center justify-center mb-3" style={{ background: `${song.color}30` }}>
+                          <Music className="w-6 h-6" style={{ color: song.color }} />
                         </div>
-
-                        {/* Controls */}
-                        <div className="flex justify-center gap-3">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setIsPlaying(!isPlaying)}
-                            className="p-3 rounded-full text-white"
-                            style={{ background: '#C97B8A' }}
-                          >
-                            {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={handleStopSong}
-                            className="p-3 rounded-full"
-                            style={{ background: '#E6DDD4' }}
-                          >
-                            <Headphones className="w-5 h-5" style={{ color: '#6B7280' }} />
-                          </motion.button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
+                        <p className="font-playfair text-sm font-semibold mb-1" style={{ color: '#1F2A44' }}>
+                          {song.title}
+                        </p>
+                        <p className="font-inter text-xs" style={{ color: '#6B7280' }}>
+                          {song.artist}
+                        </p>
+                        {isDiscovered && !isMatched && (
+                          <p className="font-caveat text-xs mt-2 italic" style={{ color: '#C97B8A' }}>
+                            Pick a mood!
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
 
+              {/* Selected Song Info */}
+              <AnimatePresence>
+                {selectedSong !== null && !matchedSongs.has(selectedSong) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="bg-white rounded-xl p-6 shadow-xl mb-8 max-w-md mx-auto"
+                    style={{ border: '2px solid #C97B8A' }}
+                  >
+                    <p className="font-caveat text-lg text-center mb-3" style={{ color: '#C97B8A' }}>
+                      Now Select a Mood for:
+                    </p>
+                    <p className="font-playfair text-xl font-semibold text-center" style={{ color: '#1F2A44' }}>
+                      {songs.find(s => s.id === selectedSong)?.title}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Mood Selection Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                {moodCategories.map((mood) => {
+                  const isSelected = selectedMood === mood.id;
+                  const Icon = mood.icon;
+
+                  return (
+                    <motion.button
+                      key={mood.id}
+                      whileHover={{ scale: selectedSong !== null ? 1.03 : 1 }}
+                      whileTap={{ scale: selectedSong !== null ? 0.97 : 1 }}
+                      onClick={() => handleMoodSelect(mood.id)}
+                      disabled={selectedSong === null}
+                      className="bg-white rounded-lg p-4 text-center transition-all"
+                      style={{
+                        border: `2px solid ${isSelected ? mood.color : '#E6DDD4'}`,
+                        opacity: selectedSong === null ? 0.5 : 1,
+                        cursor: selectedSong === null ? 'not-allowed' : 'pointer',
+                      }}
+                    >
+                      <Icon className="w-5 h-5 mx-auto mb-2" style={{ color: mood.color }} />
+                      <p className="font-playfair text-sm font-semibold" style={{ color: '#1F2A44' }}>
+                        {mood.name}
+                      </p>
+                      <p className="font-inter text-xs mt-1" style={{ color: '#6B7280' }}>
+                        {mood.description}
+                      </p>
+                    </motion.button>
+                  );
+                })}
+              </div>
+
+              {/* Confirm Button */}
+              <AnimatePresence>
+                {selectedSong !== null && selectedMood !== null && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    className="text-center"
+                  >
+                    <motion.button
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleConfirmMatch}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        background: '#1F2A44',
+                        color: '#FAF6F1',
+                        border: 'none',
+                        borderRadius: '9999px',
+                        padding: '14px 32px',
+                        fontFamily: 'Inter, sans-serif',
+                        fontWeight: 600,
+                        fontSize: '15px',
+                        cursor: 'pointer',
+                        boxShadow: '0px 10px 25px rgba(31,42,68,0.15)',
+                      }}
+                    >
+                      <Check className="w-4 h-4" />
+                      <span>Confirm Match</span>
+                    </motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Progress */}
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-4 mt-8">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <Disc3 className="w-5 h-5" style={{ color: '#C97B8A' }} />
                     <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
-                      {discoveredSongs.size} / 8 songs discovered
+                      {matchedSongs.size} / 8 matched
                     </span>
                   </div>
                 </div>
 
-                <motion.button
-                  whileHover={allDiscovered ? { scale: 1.05, y: -2 } : {}}
-                  whileTap={allDiscovered ? { scale: 0.95 } : {}}
-                  onClick={handleStartQuiz}
-                  disabled={!allDiscovered}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '10px',
-                    background: allDiscovered ? '#1F2A44' : '#D1D5DB',
-                    color: allDiscovered ? '#FAF6F1' : '#9CA3AF',
-                    border: 'none',
-                    borderRadius: '9999px',
-                    padding: '16px 36px',
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: 600,
-                    fontSize: '15px',
-                    cursor: allDiscovered ? 'pointer' : 'not-allowed',
-                    boxShadow: allDiscovered ? '0px 10px 25px rgba(31,42,68,0.15)' : 'none',
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  {allDiscovered ? 'Start Music Quiz (+25 pts)' : `Discover ${4 - discoveredSongs.size} more songs`}
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
-
-          {phase === 'quiz' && (
-            <motion.div
-              key="quiz"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="max-w-xl mx-auto"
-            >
-              {/* Cassette Collection */}
-              <div className="flex flex-wrap justify-center gap-3 mb-8 min-h-[60px]">
-                {collectedCassettes.length > 0 ? (
-                  collectedCassettes.map((_, i) => (
-                    <Cassette key={i} index={i} />
-                  ))
-                ) : (
-                  <p className="font-caveat text-lg" style={{ color: '#9CA3AF' }}>
-                    Answer correctly to collect cassettes!
-                  </p>
-                )}
-              </div>
-
-              {/* Progress bar */}
-              <div style={{ display: 'flex', gap: '6px', marginBottom: '24px' }}>
-                {musicQuiz.map((_, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      flex: 1,
-                      height: '6px',
-                      borderRadius: '3px',
-                      background: i < currentQuizQuestion ? '#C8DCC6' : i === currentQuizQuestion ? '#C97B8A' : '#E6DDD4',
-                      transition: 'background 0.3s ease',
+                {matchedSongs.size >= 8 && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      setShowConfetti(true);
+                      setTimeout(() => setPhase('results'), 1000);
                     }}
-                  />
-                ))}
-              </div>
-
-              <div
-                style={{
-                  background: 'white',
-                  padding: '32px',
-                  borderRadius: '20px',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                  border: '3px solid #E6DDD4',
-                }}
-              >
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Sparkles className="w-5 h-5" style={{ color: '#C97B8A' }} />
-                  <p className="font-caveat text-lg" style={{ color: '#C97B8A' }}>
-                    Music Quiz
-                  </p>
-                </div>
-
-                <p className="font-inter text-sm text-center mb-2" style={{ color: '#6B7280' }}>
-                  Question {currentQuizQuestion + 1} of {musicQuiz.length}
-                </p>
-
-                <h3 className="font-playfair text-lg font-semibold text-center mb-6" style={{ color: '#1F2A44' }}>
-                  {musicQuiz[currentQuizQuestion].question}
-                </h3>
-
-                <div>
-                  {musicQuiz[currentQuizQuestion].options.map((option, index) => (
-                    <motion.button
-                      key={`${currentQuizQuestion}-${index}`}
-                      whileHover={{ scale: selectedAnswer === null ? 1.02 : 1 }}
-                      whileTap={{ scale: selectedAnswer === null ? 0.97 : 1 }}
-                      onClick={() => handleAnswer(index)}
-                      disabled={selectedAnswer !== null}
-                      style={getOptionStyle(index)}
-                    >
-                      <span>{option}</span>
-                    </motion.button>
-                  ))}
-                </div>
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      background: '#A7C4A0',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '9999px',
+                      padding: '16px 36px',
+                      fontFamily: 'Inter, sans-serif',
+                      fontWeight: 600,
+                      fontSize: '15px',
+                      cursor: 'pointer',
+                      boxShadow: '0px 10px 25px rgba(167,196,160,0.3)',
+                    }}
+                  >
+                    <Award className="w-5 h-5" />
+                    <span>View Results</span>
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           )}
@@ -637,21 +437,30 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                 <div className="flex items-center gap-2 mb-6 justify-center">
                   <Award className="w-6 h-6" style={{ color: '#C97B8A' }} />
                   <h3 className="font-playfair text-xl font-semibold" style={{ color: '#1F2A44' }}>
-                    Music Collection Complete!
+                    Playlist Complete!
                   </h3>
                 </div>
 
-                {/* Cassette Collection Display */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex flex-wrap justify-center gap-3 mb-6 p-4 rounded-lg"
-                  style={{ background: '#FAF6F1' }}
-                >
-                  {collectedCassettes.map((_, i) => (
-                    <Cassette key={i} index={i} />
+                {/* Final Playlist */}
+                <div className="grid grid-cols-2 gap-3 mb-6 p-4 rounded-lg" style={{ background: '#FAF6F1' }}>
+                  {songs.map((song, i) => (
+                    <motion.div
+                      key={song.id}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="flex items-center gap-2 p-2 rounded bg-white"
+                    >
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: `${song.color}30` }}>
+                        <Music className="w-4 h-4" style={{ color: song.color }} />
+                      </div>
+                      <div>
+                        <p className="font-playfair text-xs font-semibold" style={{ color: '#1F2A44' }}>{song.title}</p>
+                        <p className="font-caveat text-xs" style={{ color: '#C97B8A' }}>{song.mood}</p>
+                      </div>
+                    </motion.div>
                   ))}
-                </motion.div>
+                </div>
 
                 <div className="text-center py-4 border-y-2 mb-6" style={{ borderColor: '#E6DDD4' }}>
                   <p className="font-caveat text-xl mb-2" style={{ color: '#6B7280' }}>Melody Score</p>
@@ -659,7 +468,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                     {musicScore} / 50
                   </p>
                   <p className="font-caveat text-lg mt-2" style={{ color: '#C97B8A' }}>
-                    {discoveredSongs.size} songs + {correctAnswers} quiz correct
+                    {correctMatches} perfect mood matches
                   </p>
                 </div>
 
@@ -686,7 +495,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                     boxShadow: '0px 10px 25px rgba(31,42,68,0.15)',
                   }}
                 >
-                  Unlock Next Chapter
+                  Continue to Next Chapter
                 </motion.button>
               </div>
             </motion.div>

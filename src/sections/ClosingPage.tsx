@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { BookOpen, Heart, Sparkles } from 'lucide-react';
+import { BookOpen, Heart, Sparkles, Star } from 'lucide-react';
 import { FairyLights } from '../components/ui/FairyLights';
 
 export default function ClosingPage() {
@@ -47,7 +47,7 @@ export default function ClosingPage() {
             initial={{ rotateY: 0 }}
             animate={{ rotateY: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity, repeatType: 'reverse' }}
-            className="bg-white rounded-2xl shadow-2xl p-12 md:p-16 relative"
+            className="bg-white rounded-2xl shadow-2xl p-10 md:p-14 relative"
             style={{
               border: '3px solid #E6DDD4',
               background: 'linear-gradient(135deg, #FAF6F1 0%, #FFFDFC 100%)',
@@ -71,7 +71,7 @@ export default function ClosingPage() {
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="w-20 h-20 rounded-full mx-auto mb-8 flex items-center justify-center"
+                className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center"
                 style={{ background: '#C97B8A' }}
               >
                 <BookOpen className="w-10 h-10 text-white" />
@@ -81,7 +81,7 @@ export default function ClosingPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="font-playfair text-4xl md:text-5xl font-bold mb-6"
+                className="font-playfair text-4xl md:text-5xl font-bold mb-4"
                 style={{ color: '#C97B8A' }}
               >
                 The End
@@ -91,13 +91,16 @@ export default function ClosingPage() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
-                className="space-y-4 mb-8"
+                className="space-y-3 mb-6"
               >
-                <p className="font-cormorant text-xl md:text-2xl" style={{ color: '#4B5563' }}>
-                  Thank you for turning these pages.
+                <p className="font-cormorant text-lg md:text-xl" style={{ color: '#4B5563' }}>
+                  Thank you for turning these pages with me.
                 </p>
-                <p className="font-cormorant text-xl md:text-2xl" style={{ color: '#4B5563' }}>
-                  May the chapters ahead be even more beautiful.
+                <p className="font-cormorant text-lg md:text-xl" style={{ color: '#4B5563' }}>
+                  This scrapbook was a journey through stories, songs, and memories.
+                </p>
+                <p className="font-cormorant text-lg md:text-xl" style={{ color: '#4B5563' }}>
+                  May every chapter ahead be filled with joy and beautiful moments.
                 </p>
               </motion.div>
 
@@ -108,10 +111,13 @@ export default function ClosingPage() {
                 className="pt-6"
                 style={{ borderTop: '2px dashed #E6DDD4' }}
               >
-                <p className="font-caveat text-2xl md:text-3xl mb-4" style={{ color: '#6B7280' }}>
+                <p className="font-caveat text-xl md:text-2xl mb-3" style={{ color: '#6B7280' }}>
+                  With love and warm wishes,
+                </p>
+                <p className="font-playfair text-2xl md:text-3xl font-bold" style={{ color: '#1F2A44' }}>
                   Happy Birthday,
                 </p>
-                <p className="font-playfair text-3xl md:text-4xl font-bold" style={{ color: '#1F2A44' }}>
+                <p className="font-playfair text-3xl md:text-4xl font-bold mt-2" style={{ color: '#C97B8A' }}>
                   Gayatri Devi Reddy
                 </p>
               </motion.div>
@@ -120,15 +126,15 @@ export default function ClosingPage() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 1.2, type: 'spring' }}
-                className="flex justify-center gap-4 mt-8"
+                className="flex justify-center gap-4 mt-6"
               >
-                {[Sparkles, Heart, Sparkles].map((Icon, i) => (
+                {[Sparkles, Heart, Star, Heart, Sparkles].map((Icon, i) => (
                   <motion.div
                     key={i}
                     animate={{ y: [0, -5, 0], rotate: [-10, 10, -10] }}
                     transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
                   >
-                    <Icon className="w-6 h-6" style={{ color: '#C97B8A' }} />
+                    <Icon className="w-5 h-5" style={{ color: '#C97B8A' }} />
                   </motion.div>
                 ))}
               </motion.div>
@@ -139,13 +145,10 @@ export default function ClosingPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}
-              className="mt-10"
+              className="mt-6"
             >
-              <p
-                className="font-caveat text-lg"
-                style={{ color: '#9CA3AF' }}
-              >
-                A personalized scrapbook adventure, made with love
+              <p className="font-caveat text-base" style={{ color: '#9CA3AF' }}>
+                A birthday scrapbook, crafted with heart
               </p>
             </motion.div>
           </motion.div>
