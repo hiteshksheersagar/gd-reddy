@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, X, Award } from 'lucide-react';
 import { Stamp } from './CelebrationEffects';
 
 const C = {
@@ -100,9 +100,10 @@ export function QuizCard({ title, questions, onComplete, completionStamp = 'Appr
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring' }}
-          style={{ fontSize: '56px', marginBottom: '16px' }}
+          className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+          style={{ background: C.sage }}
         >
-          🎉
+          <Award className="w-8 h-8 text-white" />
         </motion.div>
         <h3
           style={{
@@ -221,7 +222,7 @@ export function QuizCard({ title, questions, onComplete, completionStamp = 'Appr
         ))}
       </div>
 
-      <Stamp show={showStamp && currentQuestion === questions.length - 1} text="✓ Doctor Approved" />
+      <Stamp show={showStamp && currentQuestion === questions.length - 1} text="Doctor Approved" />
     </motion.div>
   );
 }

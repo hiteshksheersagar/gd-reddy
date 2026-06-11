@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Music, Headphones, Play, Pause, Check } from 'lucide-react';
+import { Music, Headphones, Play, Pause, Check, Disc3 } from 'lucide-react';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { Confetti } from '../components/CelebrationEffects';
 
 interface MusicSectionProps {
   onComplete: () => void;
+  updateScore: (points: number) => void;
+  musicScore: number;
 }
 
 const songs = [
@@ -35,11 +37,11 @@ const songs = [
   },
 ];
 
-export default function MusicSection({ onComplete }: MusicSectionProps) {
+export default function MusicSection({ onComplete, updateScore, musicScore }: MusicSectionProps) {
   const [selectedSong, setSelectedSong] = useState<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [listenedSongs, setListenedSongs] = useState<Set<number>>(new Set());
-  const [chapterComplete, setChapterComplete] = useState(false);
+  const [phase, setPhase] = useState<'playing' | 'complete'>('playing');
   const [showConfetti, setShowConfetti] = useState(false);
 
   const handleSelectSong = (index: number) => {
@@ -49,7 +51,11 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
 
   const handleStopSong = () => {
     if (selectedSong !== null && isPlaying) {
-      setListenedSongs((prev) => new Set([...prev, selectedSong]));
+      const newListened = new Set([...listenedSongs, selectedSong]);
+      if (!listenedSongs.has(selectedSong)) {
+        updateScore(5);
+      }
+      setListenedSongs(newListened);
     }
     setIsPlaying(false);
   };
@@ -59,7 +65,7 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
   const handleComplete = () => {
     setShowConfetti(true);
     setTimeout(() => {
-      setChapterComplete(true);
+      setPhase('complete');
       onComplete();
     }, 1500);
   };
@@ -71,8 +77,8 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
     >
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-scrapbook-sage/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 right-20 w-40 h-40 bg-scrapbook-blush/30 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-32 h-32 rounded-full blur-3xl" style={{ background: '#C8DCC630' }} />
+        <div className="absolute bottom-40 right-20 w-40 h-40 rounded-full blur-3xl" style={{ background: '#F5D6D630' }} />
       </div>
 
       <div className="max-w-5xl mx-auto">
@@ -83,23 +89,38 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
             whileInView={{ scale: 1, rotate: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center justify-center p-4 rounded-full bg-scrapbook-sage/50 mb-6"
+            className="inline-flex items-center justify-center p-4 rounded-full mb-6"
+            style={{ background: '#C8DCC650' }}
           >
-            <Music className="w-10 h-10 text-scrapbook-rose" />
+            <Music className="w-10 h-10" style={{ color: '#D8A7B1' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl text-scrapbook-rose mb-2">
+          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
             CHAPTER 4
           </p>
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            The <span className="text-scrapbook-rose">Soundtrack</span> of Her Life
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
+            The <span style={{ color: '#D8A7B1' }}>Soundtrack</span> of Her Life
           </h2>
-          <p className="font-caveat text-xl md:text-2xl text-gray-600 max-w-xl mx-auto">
+          <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
             Click on each vinyl to listen. Discover all 4 songs!
           </p>
         </ScrollReveal>
 
-        {!chapterComplete ? (
+        {/* Melody Score Display */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center mb-8"
+        >
+          <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
+            <Music className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
+              Melody Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{musicScore}</span> / 25
+            </span>
+          </div>
+        </motion.div>
+
+        {phase === 'playing' ? (
           <>
             {/* Vinyl records grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12">
@@ -125,22 +146,24 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                         repeat: selectedSong === index && isPlaying ? Infinity : 0,
                         ease: 'linear',
                       }}
-                      className="relative w-28 h-28 md:w-36 md:h-36 mx-auto rounded-full bg-gray-900 shadow-2xl flex items-center justify-center"
+                      className="relative w-28 h-28 md:w-36 md:h-36 mx-auto rounded-full shadow-2xl flex items-center justify-center"
+                      style={{ background: '#1F1F1F' }}
                     >
                       {/* Grooves */}
                       {[...Array(6)].map((_, i) => (
                         <div
                           key={i}
-                          className="absolute rounded-full border border-gray-700"
+                          className="absolute rounded-full"
                           style={{
                             width: `${(i + 1) * 16}%`,
                             height: `${(i + 1) * 16}%`,
+                            border: '1px solid #333333',
                           }}
                         />
                       ))}
 
                       {/* Center label */}
-                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-4 border-gray-800">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden" style={{ border: '4px solid #2A2A2A' }}>
                         <img src={song.cover} alt={song.title} className="w-full h-full object-cover" />
                       </div>
 
@@ -152,7 +175,8 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="absolute -bottom-1 -right-1 bg-scrapbook-sage rounded-full p-1"
+                          className="absolute -bottom-1 -right-1 rounded-full p-1"
+                          style={{ background: '#C8DCC6' }}
                         >
                           <Check className="w-4 h-4 text-white" />
                         </motion.div>
@@ -160,7 +184,7 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                     </motion.div>
                   </motion.div>
 
-                  <p className="font-playfair text-sm font-semibold text-gray-800 mt-3">
+                  <p className="font-playfair text-sm font-semibold mt-3" style={{ color: '#1F2A44' }}>
                     {song.title}
                   </p>
                 </motion.div>
@@ -174,7 +198,8 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-white rounded-2xl p-6 shadow-xl max-w-md mx-auto"
+                  className="bg-white rounded-2xl p-6 shadow-xl max-w-md mx-auto relative"
+                  style={{ border: '3px solid #E6DDD4' }}
                 >
                   {/* Waveform animation */}
                   {isPlaying && (
@@ -182,7 +207,8 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                       {[...Array(20)].map((_, i) => (
                         <motion.div
                           key={i}
-                          className="w-1 bg-scrapbook-rose rounded-full"
+                          className="w-1 rounded-full"
+                          style={{ background: '#D8A7B1' }}
                           animate={{
                             height: [20, 40 + Math.random() * 30, 20],
                           }}
@@ -197,13 +223,13 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                   )}
 
                   <div className="text-center">
-                    <h3 className="font-playfair text-xl font-semibold text-gray-800">
+                    <h3 className="font-playfair text-xl font-semibold" style={{ color: '#1F2A44' }}>
                       {songs[selectedSong].title}
                     </h3>
-                    <p className="font-inter text-sm text-gray-500 mb-2">
+                    <p className="font-inter text-sm mb-2" style={{ color: '#6B7280' }}>
                       {songs[selectedSong].artist}
                     </p>
-                    <p className="font-caveat text-lg text-scrapbook-rose">
+                    <p className="font-caveat text-lg" style={{ color: '#D8A7B1' }}>
                       Mood: {songs[selectedSong].mood}
                     </p>
                   </div>
@@ -213,7 +239,8 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setIsPlaying(!isPlaying)}
-                      className="p-3 bg-scrapbook-rose rounded-full text-white"
+                      className="p-3 rounded-full text-white"
+                      style={{ background: '#D8A7B1' }}
                     >
                       {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
                     </motion.button>
@@ -221,17 +248,18 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={handleStopSong}
-                      className="p-3 bg-gray-200 rounded-full text-gray-700"
+                      className="p-3 rounded-full"
+                      style={{ background: '#E6DDD4', color: '#6B7280' }}
                     >
                       <Headphones className="w-6 h-6" />
                     </motion.button>
                   </div>
 
-                  {/* Floating music notes */}
+                  {/* Floating music symbols */}
                   {isPlaying && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                      {['♪', '♫', '♬'].map((note, i) => (
-                        <motion.span
+                      {[Music, Disc3, Music].map((Icon, i) => (
+                        <motion.div
                           key={i}
                           initial={{ opacity: 0, y: 0 }}
                           animate={{
@@ -244,10 +272,11 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                             repeat: Infinity,
                             delay: i * 0.3,
                           }}
-                          className="absolute text-2xl text-scrapbook-rose/60"
+                          className="absolute"
+                          style={{ color: '#D8A7B160' }}
                         >
-                          {note}
-                        </motion.span>
+                          <Icon className="w-5 h-5" />
+                        </motion.div>
                       ))}
                     </div>
                   )}
@@ -256,8 +285,8 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
             </AnimatePresence>
 
             {/* Progress indicator */}
-            <div className="flex justify-center items-center gap-4 mt-8">
-              <span className="font-caveat text-lg text-gray-600">
+            <div className="flex flex-col items-center gap-4 mt-8">
+              <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
                 {listenedSongs.size} / {songs.length} songs discovered
               </span>
               <button
@@ -268,12 +297,12 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
                   color: allListened ? '#FAF6F1' : '#9CA3AF',
                   border: 'none',
                   borderRadius: '9999px',
-                  padding: '14px 32px',
+                  padding: '16px 36px',
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: 600,
                   fontSize: '15px',
                   cursor: allListened ? 'pointer' : 'not-allowed',
-                  boxShadow: allListened ? '0 8px 20px rgba(31,42,68,0.2)' : 'none',
+                  boxShadow: allListened ? '0px 10px 25px rgba(31,42,68,0.15)' : 'none',
                   transition: 'all 0.3s ease',
                 }}
               >
@@ -287,16 +316,20 @@ export default function MusicSection({ onComplete }: MusicSectionProps) {
             animate={{ opacity: 1 }}
             className="text-center"
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-              className="inline-block text-6xl mb-4"
-            >
-              🎵
-            </motion.div>
-            <div className="inline-flex items-center gap-2 bg-scrapbook-sage/50 px-6 py-3 rounded-full">
-              <Music className="w-5 h-5 text-scrapbook-rose" />
-              <span className="font-caveat text-xl text-gray-700">Chapter 4 Complete!</span>
+            <div className="bg-white p-8 rounded-xl shadow-xl inline-block mb-6">
+              <div className="flex justify-center gap-4 mb-4">
+                {songs.map((_, i) => (
+                  <Disc3 key={i} className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                ))}
+              </div>
+              <p className="font-caveat text-2xl mb-2" style={{ color: '#6B7280' }}>Melody Score</p>
+              <p className="font-playfair text-4xl font-bold" style={{ color: '#1F2A44' }}>
+                {musicScore} / 25
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
+              <Music className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+              <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 4 Complete!</span>
             </div>
           </motion.div>
         )}

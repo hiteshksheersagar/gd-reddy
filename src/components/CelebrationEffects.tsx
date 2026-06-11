@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { Sparkles as SparklesIcon, Heart } from 'lucide-react';
 
 interface ConfettiProps {
   show: boolean;
@@ -87,9 +88,9 @@ export function Sparkles({ show }: SparklesProps) {
                 delay: i * 0.1,
                 repeat: 2,
               }}
-              className="absolute text-2xl"
+              className="absolute"
             >
-              ✨
+              <SparklesIcon className="w-6 h-6" style={{ color: '#D8A7B1' }} />
             </motion.div>
           ))}
         </div>
@@ -156,9 +157,9 @@ export function FloatingHearts({ show }: FloatingHeartsProps) {
                 delay: i * 0.2,
                 ease: 'easeOut',
               }}
-              className="absolute text-3xl text-scrapbook-rose"
+              className="absolute"
             >
-              ♥
+              <Heart className="w-8 h-8" style={{ color: '#D8A7B1', fill: '#D8A7B1' }} />
             </motion.div>
           ))}
         </div>

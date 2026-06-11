@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Star } from 'lucide-react';
 
 interface MovieTicketProps {
   movie: string;
@@ -57,7 +58,7 @@ export function MovieTicket({
             </div>
             <div className="text-right">
               <p className="font-caveat text-sm text-scrapbook-rose">Admit One</p>
-              <p className="font-inter text-sm font-medium">★</p>
+              <Star className="w-4 h-4 inline" style={{ color: '#D8A7B1' }} />
             </div>
           </div>
         </div>

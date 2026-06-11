@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Heart, Star, Sparkles } from 'lucide-react';
+import { Heart, Star, Sparkles, ChevronRight } from 'lucide-react';
 import { FairyLights } from '../components/ui/FairyLights';
 import { Sticker } from '../components/ui/Sticker';
 import { Envelope } from '../components/Envelope';
@@ -104,14 +104,19 @@ export default function HeroSection({ onBeginJourney }: HeroSectionProps) {
               </motion.span>
             </h1>
 
-            <motion.p
+            <motion.div
               className="font-cormorant text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto mb-8"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
             >
-              A personalized scrapbook adventure created especially for you
-            </motion.p>
+              <p className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+                <span>Doctor.</span>
+                <span>Dreamer.</span>
+                <span>Movie Lover.</span>
+                <span>A Heart Full of Stories.</span>
+              </p>
+            </motion.div>
           </motion.div>
 
           {/* Decorative divider */}
@@ -155,12 +160,12 @@ export default function HeroSection({ onBeginJourney }: HeroSectionProps) {
               boxShadow: '0 8px 20px rgba(31,42,68,0.2)',
             }}
           >
-            <span>Begin The Journey</span>
+            <span>Turn The First Page</span>
             <motion.span
               animate={{ x: [0, 4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              →
+              <ChevronRight className="w-5 h-5" />
             </motion.span>
           </motion.button>
         </div>

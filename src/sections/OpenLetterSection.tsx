@@ -1,12 +1,14 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Search, Heart } from 'lucide-react';
+import { Search, Heart, BookMarked, Sparkles, Check } from 'lucide-react';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { Confetti, FloatingHearts } from '../components/CelebrationEffects';
 import { FairyLights } from '../components/ui/FairyLights';
 
 interface OpenLetterSectionProps {
   onComplete: () => void;
+  updateScore: (points: number) => void;
+  discoveryScore: number;
 }
 
 const notes = [
@@ -19,40 +21,39 @@ const notes = [
 ];
 
 const hiddenNotes = [
-  { id: 7, text: "You are loved.", x: 10, y: 85, found: false },
-  { id: 8, text: "You matter.", x: 90, y: 75, found: false },
-  { id: 9, text: "Believe in yourself.", x: 50, y: 90, found: false },
+  { id: 7, text: "Keep believing.", x: 10, y: 85 },
+  { id: 8, text: "Dream bigger.", x: 90, y: 75 },
+  { id: 9, text: "Stay curious.", x: 50, y: 90 },
+  { id: 10, text: "Keep shining.", x: 30, y: 50 },
+  { id: 11, text: "Keep healing.", x: 75, y: 30 },
 ];
 
-export default function OpenLetterSection({ onComplete }: OpenLetterSectionProps) {
+export default function OpenLetterSection({ onComplete, updateScore, discoveryScore }: OpenLetterSectionProps) {
   const [foundNotes, setFoundNotes] = useState<Set<number>>(new Set());
   const [showHearts, setShowHearts] = useState(false);
-  const [chapterComplete, setChapterComplete] = useState(false);
+  const [phase, setPhase] = useState<'hunting' | 'complete'>('hunting');
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const allNotes = [
-    ...notes.map(n => ({ ...n, isHidden: false })),
-    ...hiddenNotes.map(n => ({ ...n, isHidden: true })),
-  ];
+  const allVisibleNotes = notes.map(n => ({ ...n, isHidden: false }));
+  const allHiddenNotes = hiddenNotes.map(n => ({ ...n, isHidden: true }));
 
   const handleNoteClick = (id: number, isHidden: boolean) => {
     if (isHidden && !foundNotes.has(id)) {
       const newFound = new Set(foundNotes);
       newFound.add(id);
       setFoundNotes(newFound);
+      updateScore(5);
 
-      if (newFound.size === hiddenNotes.length) {
+      if (newFound.size >= 3) {
         setShowHearts(true);
         setTimeout(() => {
           setShowConfetti(true);
-          setChapterComplete(true);
+          setPhase('complete');
           onComplete();
         }, 2000);
       }
     }
   };
-
-  const hiddenFoundCount = Array.from(foundNotes).filter(id => hiddenNotes.some(h => h.id === id)).length;
 
   return (
     <section
@@ -68,54 +69,65 @@ export default function OpenLetterSection({ onComplete }: OpenLetterSectionProps
             initial={{ y: 20, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center justify-center p-4 rounded-full bg-scrapbook-rose/20 mb-6"
+            className="inline-flex items-center justify-center p-4 rounded-full mb-6"
+            style={{ background: '#D8A7B130' }}
           >
-            <Search className="w-10 h-10 text-scrapbook-rose" />
+            <Search className="w-10 h-10" style={{ color: '#D8A7B1' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl text-scrapbook-rose mb-2">
+          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
             CHAPTER 6
           </p>
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Little <span className="text-scrapbook-rose">Notes</span>
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
+            Notes Found <span style={{ color: '#D8A7B1' }}>Between Pages</span>
           </h2>
-          <p className="font-caveat text-xl md:text-2xl text-gray-600">
-            Find the 3 hidden notes scattered around!
+          <p className="font-caveat text-xl md:text-2xl" style={{ color: '#6B7280' }}>
+            Find at least 3 hidden notes scattered around!
           </p>
         </ScrollReveal>
 
-        {!chapterComplete ? (
+        {/* Discovery Score Display */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center mb-8"
+        >
+          <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
+            <BookMarked className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
+              Discovery Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{discoveryScore}</span> / 15
+            </span>
+          </div>
+        </motion.div>
+
+        {phase === 'hunting' ? (
           <>
             {/* Notes Area */}
-            <div className="relative h-[500px] bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="relative h-[500px] bg-white rounded-2xl shadow-xl overflow-hidden" style={{ border: '3px solid #E6DDD4' }}>
               {/* Paper texture background */}
               <div className="absolute inset-0 paper-texture opacity-30" />
 
-              {/* All visible notes */}
-              {allNotes.map((note) => {
+              {/* Visible notes */}
+              {allVisibleNotes.map((note) => (
+                <motion.div
+                  key={note.id}
+                  initial={{ opacity: 0, y: 20, rotate: Math.random() * 10 - 5 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: note.id * 0.1 }}
+                  className="absolute"
+                  style={{ left: `${note.x}%`, top: `${note.y}%` }}
+                >
+                  <div className="p-3 rounded-lg shadow-md" style={{ background: '#FAF6F1', borderLeft: '4px solid #D8A7B1' }}>
+                    <p className="font-caveat text-lg" style={{ color: '#6B7280' }}>{note.text}</p>
+                  </div>
+                </motion.div>
+              ))}
+
+              {/* Hidden notes */}
+              {allHiddenNotes.map((note) => {
                 const isFound = foundNotes.has(note.id);
-                const isHidden = note.isHidden;
 
-                if (!isHidden) {
-                  // Visible notes - always shown
-                  return (
-                    <motion.div
-                      key={note.id}
-                      initial={{ opacity: 0, y: 20, rotate: Math.random() * 10 - 5 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: note.id * 0.1 }}
-                      className="absolute"
-                      style={{ left: `${note.x}%`, top: `${note.y}%` }}
-                    >
-                      <div className="bg-scrapbook-cream p-3 rounded-lg shadow-md border-l-4 border-scrapbook-rose">
-                        <p className="font-caveat text-lg text-gray-700">{note.text}</p>
-                      </div>
-                    </motion.div>
-                  );
-                }
-
-                // Hidden notes - need to be found
                 return (
                   <motion.div
                     key={note.id}
@@ -123,13 +135,24 @@ export default function OpenLetterSection({ onComplete }: OpenLetterSectionProps
                     animate={{ opacity: isFound ? 1 : 0.15, scale: 1 }}
                     whileHover={{ scale: isFound ? 1 : 1.2 }}
                     onClick={() => handleNoteClick(note.id, true)}
-                    className={`absolute cursor-pointer ${isFound ? '' : 'animate-pulse'}`}
+                    className="absolute cursor-pointer"
                     style={{ left: `${note.x}%`, top: `${note.y}%` }}
                   >
-                    <div className={`p-3 rounded-lg ${isFound ? 'bg-scrapbook-sage shadow-lg' : 'bg-gray-200/50'}`}>
-                      <p className={`font-caveat text-lg ${isFound ? 'text-gray-700' : 'text-gray-400'}`}>
-                        {isFound ? note.text : '?'}
-                      </p>
+                    <div
+                      className="p-3 rounded-lg flex items-center gap-2"
+                      style={{
+                        background: isFound ? '#C8DCC6' : '#E6DDD480',
+                        boxShadow: isFound ? '0 4px 12px rgba(200, 220, 198, 0.4)' : 'none',
+                      }}
+                    >
+                      {isFound ? (
+                        <>
+                          <Check className="w-4 h-4" style={{ color: '#065F46' }} />
+                          <p className="font-caveat text-lg" style={{ color: '#6B7280' }}>{note.text}</p>
+                        </>
+                      ) : (
+                        <p className="font-caveat text-lg animate-pulse" style={{ color: '#9CA3AF' }}>?</p>
+                      )}
                     </div>
                   </motion.div>
                 );
@@ -137,7 +160,7 @@ export default function OpenLetterSection({ onComplete }: OpenLetterSectionProps
 
               {/* Hint */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
-                <p className="font-caveat text-sm text-gray-400 flex items-center gap-1">
+                <p className="font-caveat text-sm flex items-center gap-1" style={{ color: '#9CA3AF' }}>
                   <Search className="w-4 h-4" />
                   Click on hidden notes to reveal them
                 </p>
@@ -147,9 +170,9 @@ export default function OpenLetterSection({ onComplete }: OpenLetterSectionProps
             {/* Progress */}
             <div className="text-center mt-8">
               <div className="inline-flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-md">
-                <Heart className="w-5 h-5 text-scrapbook-rose" />
-                <span className="font-caveat text-xl text-gray-700">
-                  Hidden notes found: {hiddenFoundCount} / {hiddenNotes.length}
+                <Heart className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>
+                  Hidden notes found: {foundNotes.size} / {hiddenNotes.length} (need 3)
                 </span>
               </div>
             </div>
@@ -160,29 +183,38 @@ export default function OpenLetterSection({ onComplete }: OpenLetterSectionProps
             animate={{ opacity: 1, scale: 1 }}
             className="text-center"
           >
-            <div className="bg-white rounded-2xl p-8 shadow-xl inline-block">
+            <div className="bg-white rounded-2xl p-8 shadow-xl inline-block mb-6" style={{ border: '3px solid #E6DDD4' }}>
               <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
+                animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 1, repeat: Infinity }}
-                className="text-6xl mb-4"
+                className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+                style={{ background: '#C8DCC6' }}
               >
-                💌
+                <BookMarked className="w-8 h-8 text-white" />
               </motion.div>
-              <h3 className="font-playfair text-2xl font-semibold text-gray-800 mb-4">
-                All Hidden Notes Found!
+              <h3 className="font-playfair text-2xl font-semibold mb-4" style={{ color: '#1F2A44' }}>
+                Hidden Notes Discovered!
               </h3>
-              <div className="flex flex-wrap gap-3 justify-center">
-                {hiddenNotes.map((note) => (
-                  <div key={note.id} className="bg-scrapbook-sage/50 px-4 py-2 rounded-lg">
-                    <p className="font-caveat text-lg text-gray-700">{note.text}</p>
-                  </div>
-                ))}
+              <div className="flex flex-wrap gap-3 justify-center mb-4">
+                {Array.from(foundNotes).slice(0, 3).map((id) => {
+                  const note = hiddenNotes.find(n => n.id === id);
+                  if (!note) return null;
+                  return (
+                    <div key={id} className="px-4 py-2 rounded-lg flex items-center gap-2" style={{ background: '#C8DCC650' }}>
+                      <Check className="w-4 h-4" style={{ color: '#065F46' }} />
+                      <p className="font-caveat text-lg" style={{ color: '#6B7280' }}>{note.text}</p>
+                    </div>
+                  );
+                })}
               </div>
+              <p className="font-caveat text-xl" style={{ color: '#D8A7B1' }}>
+                Discovery Score: {discoveryScore} / 15
+              </p>
             </div>
 
-            <div className="mt-8 inline-flex items-center gap-2 bg-scrapbook-sage/50 px-6 py-3 rounded-full">
-              <Heart className="w-5 h-5 text-scrapbook-rose fill-scrapbook-rose" />
-              <span className="font-caveat text-xl text-gray-700">Chapter 6 Complete!</span>
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
+              <Sparkles className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+              <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 6 Complete!</span>
             </div>
           </motion.div>
         )}

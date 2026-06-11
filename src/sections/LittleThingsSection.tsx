@@ -1,31 +1,36 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Sparkles, Check } from 'lucide-react';
+import {
+  Sparkles, Check, Coffee, Book, Flower2, Film, Music, Plane,
+  Moon, Heart, Star, PenLine, Stethoscope, Building2
+} from 'lucide-react';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { Confetti } from '../components/CelebrationEffects';
 
 interface LittleThingsSectionProps {
   onComplete: () => void;
+  updateScore: (points: number) => void;
+  personalityScore: number;
 }
 
 const allStickers = [
-  { id: 'coffee', label: 'Coffee', emoji: '☕' },
-  { id: 'books', label: 'Books', emoji: '📚' },
-  { id: 'flowers', label: 'Flowers', emoji: '🌸' },
-  { id: 'movies', label: 'Movies', emoji: '🎬' },
-  { id: 'music', label: 'Music', emoji: '🎵' },
-  { id: 'travel', label: 'Travel', emoji: '✈️' },
-  { id: 'sunsets', label: 'Sunsets', emoji: '🌅' },
-  { id: 'dreams', label: 'Dreams', emoji: '💭' },
-  { id: 'whitecoat', label: 'White Coat', emoji: '🥼' },
-  { id: 'stars', label: 'Stars', emoji: '⭐' },
-  { id: 'rain', label: 'Rain', emoji: '🌧️' },
-  { id: 'writing', label: 'Writing', emoji: '✍️' },
+  { id: 'coffee', label: 'Coffee', icon: Coffee },
+  { id: 'books', label: 'Books', icon: Book },
+  { id: 'flowers', label: 'Flowers', icon: Flower2 },
+  { id: 'movies', label: 'Movies', icon: Film },
+  { id: 'music', label: 'Music', icon: Music },
+  { id: 'travel', label: 'Travel', icon: Plane },
+  { id: 'night', label: 'Night Sky', icon: Moon },
+  { id: 'stars', label: 'Stars', icon: Star },
+  { id: 'dreams', label: 'Dreams', icon: Heart },
+  { id: 'writing', label: 'Writing', icon: PenLine },
+  { id: 'whitecoat', label: 'White Coat', icon: Stethoscope },
+  { id: 'city', label: 'City Lights', icon: Building2 },
 ];
 
-export default function LittleThingsSection({ onComplete }: LittleThingsSectionProps) {
+export default function LittleThingsSection({ onComplete, updateScore, personalityScore }: LittleThingsSectionProps) {
   const [selectedStickers, setSelectedStickers] = useState<string[]>([]);
-  const [chapterComplete, setChapterComplete] = useState(false);
+  const [phase, setPhase] = useState<'selecting' | 'complete'>('selecting');
   const [showConfetti, setShowConfetti] = useState(false);
 
   const toggleSticker = (id: string) => {
@@ -37,11 +42,14 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
   };
 
   const handleComplete = () => {
-    setShowConfetti(true);
-    setTimeout(() => {
-      setChapterComplete(true);
-      onComplete();
-    }, 2000);
+    if (selectedStickers.length >= 5) {
+      updateScore(15);
+      setShowConfetti(true);
+      setTimeout(() => {
+        setPhase('complete');
+        onComplete();
+      }, 2000);
+    }
   };
 
   return (
@@ -56,30 +64,46 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center justify-center p-4 rounded-full bg-scrapbook-blush/50 mb-6"
+            className="inline-flex items-center justify-center p-4 rounded-full mb-6"
+            style={{ background: '#F5D6D650' }}
           >
-            <Sparkles className="w-10 h-10 text-scrapbook-rose" />
+            <Sparkles className="w-10 h-10" style={{ color: '#D8A7B1' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl text-scrapbook-rose mb-2">
+          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
             CHAPTER 5
           </p>
-          <h2 className="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Things That Feel Like <span className="text-scrapbook-rose">Gayatri</span>
+          <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
+            Things That Feel Like <span style={{ color: '#D8A7B1' }}>Gayatri</span>
           </h2>
-          <p className="font-caveat text-xl md:text-2xl text-gray-600 max-w-xl mx-auto">
-            Pick 5 stickers that feel most like you
+          <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
+            Select 5 things that describe you best
           </p>
         </ScrollReveal>
 
-        {!chapterComplete ? (
+        {/* Personality Score Display */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-center mb-8"
+        >
+          <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
+            <Sparkles className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
+              Personality Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{personalityScore}</span> / 15
+            </span>
+          </div>
+        </motion.div>
+
+        {phase === 'selecting' ? (
           <>
             {/* Sticker Board */}
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl mb-8">
+            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-xl mb-8" style={{ border: '3px solid #E6DDD4' }}>
               <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
                 {allStickers.map((sticker, index) => {
                   const isSelected = selectedStickers.includes(sticker.id);
                   const isDisabled = !isSelected && selectedStickers.length >= 5;
+                  const Icon = sticker.icon;
 
                   return (
                     <motion.button
@@ -88,25 +112,30 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
                       whileInView={{ opacity: 1, scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ delay: index * 0.05 }}
-                      whileHover={{ scale: isDisabled ? 1 : 1.1 }}
+                      whileHover={{ scale: isDisabled ? 1 : 1.1, rotate: isDisabled ? 0 : 5 }}
                       whileTap={{ scale: isDisabled ? 1 : 0.9 }}
                       onClick={() => !isDisabled && toggleSticker(sticker.id)}
-                      className={`relative p-4 rounded-xl transition-all ${
-                        isSelected
-                          ? 'bg-scrapbook-blush shadow-lg ring-2 ring-scrapbook-rose'
-                          : isDisabled
-                          ? 'bg-gray-100 opacity-50 cursor-not-allowed'
-                          : 'bg-scrapbook-cream hover:bg-scrapbook-sage/30 cursor-pointer'
-                      }`}
+                      className="relative p-4 rounded-xl transition-all"
+                      style={{
+                        background: isSelected ? '#F5D6D630' : isDisabled ? '#F4EDE6' : '#FAF6F1',
+                        boxShadow: isSelected ? '0 4px 12px rgba(216, 167, 177, 0.3)' : 'none',
+                        border: `2px solid ${isSelected ? '#D8A7B1' : isDisabled ? '#E6DDD4' : '#E6DDD4'}`,
+                        opacity: isDisabled ? 0.5 : 1,
+                        cursor: isDisabled ? 'not-allowed' : 'pointer',
+                      }}
                     >
-                      <span className="text-3xl md:text-4xl block mb-1">{sticker.emoji}</span>
-                      <span className="font-caveat text-sm text-gray-700">{sticker.label}</span>
+                      <Icon
+                        className="w-8 h-8 mx-auto mb-2"
+                        style={{ color: isSelected ? '#D8A7B1' : '#6B7280' }}
+                      />
+                      <span className="font-caveat text-sm block" style={{ color: '#2E3440' }}>{sticker.label}</span>
 
                       {isSelected && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="absolute -top-2 -right-2 bg-scrapbook-rose rounded-full p-1"
+                          className="absolute -top-2 -right-2 rounded-full p-1"
+                          style={{ background: '#D8A7B1' }}
                         >
                           <Check className="w-3 h-3 text-white" />
                         </motion.div>
@@ -117,7 +146,7 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
               </div>
 
               <div className="text-center mt-6">
-                <span className="font-caveat text-lg text-gray-600">
+                <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
                   Selected: {selectedStickers.length} / 5
                 </span>
               </div>
@@ -129,22 +158,28 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-scrapbook-cream rounded-2xl p-6 shadow-xl border-2 border-dashed border-scrapbook-rose/50"
+                  className="rounded-2xl p-6 shadow-xl mb-8"
+                  style={{
+                    background: '#FAF6F1',
+                    border: '2px dashed #D8A7B1',
+                  }}
                 >
-                  <p className="font-caveat text-lg text-gray-600 mb-4 text-center">
+                  <p className="font-caveat text-lg text-center mb-4" style={{ color: '#6B7280' }}>
                     Your Personalized Page
                   </p>
                   <div className="flex flex-wrap justify-center gap-3">
                     {selectedStickers.map((id) => {
                       const sticker = allStickers.find((s) => s.id === id);
+                      if (!sticker) return null;
+                      const Icon = sticker.icon;
                       return (
                         <motion.div
                           key={id}
                           initial={{ scale: 0, rotate: -20 }}
                           animate={{ scale: 1, rotate: Math.random() * 20 - 10 }}
-                          className="bg-white px-4 py-2 rounded-lg shadow-md"
+                          className="bg-white px-4 py-3 rounded-lg shadow-md"
                         >
-                          <span className="text-2xl">{sticker?.emoji}</span>
+                          <Icon className="w-6 h-6" style={{ color: '#D8A7B1' }} />
                         </motion.div>
                       );
                     })}
@@ -154,8 +189,10 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
             </AnimatePresence>
 
             {/* Complete Button */}
-            <div className="text-center mt-8">
-              <button
+            <div className="text-center">
+              <motion.button
+                whileHover={selectedStickers.length >= 5 ? { scale: 1.05, y: -2 } : {}}
+                whileTap={selectedStickers.length >= 5 ? { scale: 0.95 } : {}}
                 onClick={handleComplete}
                 disabled={selectedStickers.length < 5}
                 style={{
@@ -163,17 +200,17 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
                   color: selectedStickers.length >= 5 ? '#FAF6F1' : '#9CA3AF',
                   border: 'none',
                   borderRadius: '9999px',
-                  padding: '14px 32px',
+                  padding: '16px 36px',
                   fontFamily: 'Inter, sans-serif',
                   fontWeight: 600,
                   fontSize: '15px',
                   cursor: selectedStickers.length >= 5 ? 'pointer' : 'not-allowed',
-                  boxShadow: selectedStickers.length >= 5 ? '0 8px 20px rgba(31,42,68,0.2)' : 'none',
+                  boxShadow: selectedStickers.length >= 5 ? '0px 10px 25px rgba(31,42,68,0.15)' : 'none',
                   transition: 'all 0.3s ease',
                 }}
               >
                 {selectedStickers.length >= 5 ? 'Unlock Next Chapter' : `Select ${5 - selectedStickers.length} more`}
-              </button>
+              </motion.button>
             </div>
           </>
         ) : (
@@ -182,27 +219,32 @@ export default function LittleThingsSection({ onComplete }: LittleThingsSectionP
             animate={{ opacity: 1 }}
             className="text-center"
           >
-            <div className="bg-white rounded-2xl p-8 shadow-xl inline-block">
-              <p className="font-caveat text-2xl text-gray-700 mb-4">Your Things:</p>
-              <div className="flex gap-3 justify-center mb-4">
+            <div className="bg-white rounded-2xl p-8 shadow-xl inline-block mb-6">
+              <p className="font-caveat text-2xl mb-4" style={{ color: '#6B7280' }}>Your Things:</p>
+              <div className="flex gap-4 justify-center mb-4">
                 {selectedStickers.map((id) => {
                   const sticker = allStickers.find((s) => s.id === id);
+                  if (!sticker) return null;
+                  const Icon = sticker.icon;
                   return (
-                    <motion.span
+                    <motion.div
                       key={id}
                       animate={{ y: [0, -5, 0] }}
                       transition={{ duration: 2, repeat: Infinity, delay: Math.random() * 2 }}
-                      className="text-4xl"
+                      className="bg-white rounded-lg shadow-md p-3"
                     >
-                      {sticker?.emoji}
-                    </motion.span>
+                      <Icon className="w-8 h-8" style={{ color: '#D8A7B1' }} />
+                    </motion.div>
                   );
                 })}
               </div>
+              <p className="font-caveat text-xl" style={{ color: '#D8A7B1' }}>
+                Personality Score: {personalityScore} / 15
+              </p>
             </div>
-            <div className="mt-8 inline-flex items-center gap-2 bg-scrapbook-sage/50 px-6 py-3 rounded-full">
-              <Sparkles className="w-5 h-5 text-scrapbook-rose" />
-              <span className="font-caveat text-xl text-gray-700">Chapter 5 Complete!</span>
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
+              <Sparkles className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+              <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 5 Complete!</span>
             </div>
           </motion.div>
         )}

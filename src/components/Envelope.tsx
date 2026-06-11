@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Mail } from 'lucide-react';
+import { Mail, MailOpen } from 'lucide-react';
 
 const C = {
   cream: '#FAF6F1',
@@ -146,7 +146,7 @@ export function Envelope({
                     color: '#6B7280',
                   }}
                 >
-                  Click to open ✉️
+                  Click to open
                 </span>
               </motion.div>
             </motion.div>
@@ -176,9 +176,10 @@ export function Envelope({
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.2, type: 'spring' }}
-                    style={{ fontSize: '52px', marginBottom: '16px' }}
+                    className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+                    style={{ background: C.rose }}
                   >
-                    💌
+                    <MailOpen size={28} color="white" />
                   </motion.div>
 
                   <p

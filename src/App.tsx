@@ -9,33 +9,41 @@ import LittleThingsSection from './sections/LittleThingsSection';
 import OpenLetterSection from './sections/OpenLetterSection';
 import GreetingCardSection from './sections/GreetingCardSection';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Check } from 'lucide-react';
+import { Lock, Check, BookOpen, Stethoscope, Film, Music, Sparkles, BookMarked, Cake, Award } from 'lucide-react';
 import { Confetti } from './components/CelebrationEffects';
+import { ChapterProvider, useChapters } from './context/ChapterContext';
 
-// Scrapbook color constants
 const C = {
   cream: '#FAF6F1',
   blush: '#F5D6D6',
-  rose: '#E8B4B8',
-  sage: '#D8E2D0',
-  lavender: '#E6E1F5',
+  rose: '#D8A7B1',
+  sage: '#C8DCC6',
+  lavender: '#D8D2F0',
   beige: '#E9DFD2',
   navy: '#1F2A44',
 };
 
 const chapters = [
-  { id: 1, title: 'The Story of Gayatri Devi Reddy', icon: '📖' },
-  { id: 2, title: 'The White Coat Chronicles', icon: '🥼' },
-  { id: 3, title: 'Movie Therapy', icon: '🎬' },
-  { id: 4, title: 'The Soundtrack of Her Life', icon: '🎵' },
-  { id: 5, title: 'Things That Feel Like Gayatri', icon: '✨' },
-  { id: 6, title: 'Little Notes', icon: '💌' },
-  { id: 7, title: 'The Scrapbook Greeting Card', icon: '🎂' },
+  { id: 1, title: 'The Story of Gayatri Devi Reddy', icon: BookOpen },
+  { id: 2, title: 'The White Coat Chronicles', icon: Stethoscope },
+  { id: 3, title: 'Romantic Cinema Challenge', icon: Film },
+  { id: 4, title: 'The Soundtrack of Her Life', icon: Music },
+  { id: 5, title: 'Things That Feel Like Gayatri', icon: Sparkles },
+  { id: 6, title: 'Notes Found Between Pages', icon: BookMarked },
+  { id: 7, title: 'The Birthday Scrapbook', icon: Cake },
 ];
 
-function App() {
-  const [unlockedChapters, setUnlockedChapters] = useState<number[]>([1]);
-  const [currentChapter, setCurrentChapter] = useState(1);
+function ScrapbookContent() {
+  const {
+    unlockedChapters,
+    currentChapter,
+    scores,
+    unlockChapter,
+    setCurrentChapter,
+    updateScore,
+    getTotalScore,
+  } = useChapters();
+
   const [showUnlockEffect, setShowUnlockEffect] = useState(false);
   const [newlyUnlocked, setNewlyUnlocked] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -50,16 +58,15 @@ function App() {
     }
   }, []);
 
-  const unlockChapter = (chapter: number) => {
+  const handleUnlockChapter = (chapter: number) => {
     if (!unlockedChapters.includes(chapter) && chapter <= 7) {
       setNewlyUnlocked(chapter);
       setShowUnlockEffect(true);
       setShowConfetti(true);
 
       setTimeout(() => {
-        setUnlockedChapters((prev) => [...prev, chapter]);
+        unlockChapter(chapter);
         setCurrentChapter(chapter);
-        // Scroll to top of new chapter
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }, 800);
 
@@ -72,17 +79,56 @@ function App() {
   };
 
   const handleChapterComplete = () => {
-    unlockChapter(currentChapter + 1);
+    handleUnlockChapter(currentChapter + 1);
   };
 
   const handleBeginJourney = () => {
-    unlockChapter(2);
+    handleUnlockChapter(2);
   };
+
+  const totalScore = getTotalScore();
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.cream, overflowX: 'hidden' }}>
+      {/* Global Score Display */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="hidden md:flex fixed left-4 top-1/2 -translate-y-1/2 z-40"
+      >
+        <div
+          className="bg-white rounded-2xl shadow-xl p-4"
+          style={{ border: '3px solid #E6DDD4' }}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <Award className="w-5 h-5" style={{ color: C.rose }} />
+            <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
+              Current Score
+            </span>
+          </div>
+          <p className="font-playfair text-3xl font-bold text-center" style={{ color: C.navy }}>
+            {totalScore} / 100
+          </p>
+          <div className="mt-3 pt-3 text-xs space-y-1" style={{ borderTop: '1px solid #E6DDD4' }}>
+            {[
+              { label: 'Doctor', score: scores.doctor, max: 20 },
+              { label: 'Cinema', score: scores.movies, max: 25 },
+              { label: 'Melody', score: scores.music, max: 25 },
+              { label: 'Personality', score: scores.personality, max: 15 },
+              { label: 'Discovery', score: scores.discovery, max: 15 },
+            ].map(item => (
+              <div key={item.label} className="flex justify-between">
+                <span style={{ color: '#6B7280' }}>{item.label}</span>
+                <span className="font-medium" style={{ color: C.navy }}>
+                  {item.score}/{item.max}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
-      {/* ── Scrapbook Bookmark Sidebar ── */}
+      {/* Scrapbook Bookmark Sidebar */}
       <div
         className="hidden md:flex"
         style={{
@@ -114,6 +160,7 @@ function App() {
           const isCurrent = currentChapter === chapter.id;
           const isComplete = isUnlocked && currentChapter > chapter.id;
           const isJustUnlocked = newlyUnlocked === chapter.id;
+          const Icon = chapter.icon;
 
           const bookmarkBg = isCurrent
             ? C.rose
@@ -145,7 +192,7 @@ function App() {
                   backgroundColor: bookmarkBg,
                   clipPath: 'polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%)',
                   boxShadow: isCurrent
-                    ? `0 4px 16px rgba(232, 180, 184, 0.6)`
+                    ? `0 4px 16px rgba(216, 167, 177, 0.6)`
                     : '0 2px 8px rgba(0,0,0,0.12)',
                   display: 'flex',
                   alignItems: 'center',
@@ -159,13 +206,12 @@ function App() {
                 {isComplete ? (
                   <Check size={16} color="white" />
                 ) : isUnlocked ? (
-                  <motion.span
-                    style={{ fontSize: '18px', lineHeight: 1 }}
+                  <motion.div
                     animate={isJustUnlocked ? { scale: [1, 1.4, 1] } : {}}
                     transition={{ duration: 0.4 }}
                   >
-                    {chapter.icon}
-                  </motion.span>
+                    <Icon size={18} color={isJustUnlocked ? 'white' : C.navy} />
+                  </motion.div>
                 ) : (
                   <Lock size={14} color="#9CA3AF" />
                 )}
@@ -204,7 +250,6 @@ function App() {
                     </p>
                   )}
                 </div>
-                {/* Arrow */}
                 <div
                   style={{
                     position: 'absolute',
@@ -242,7 +287,7 @@ function App() {
                           width: '6px',
                           height: '6px',
                           borderRadius: '50%',
-                          backgroundColor: ['#F5D6D6', '#E8B4B8', '#D8E2D0', '#E6E1F5', '#F8DCC8', '#E8B4B8'][i],
+                          backgroundColor: [C.blush, C.rose, C.sage, C.lavender, '#F8DCC8', C.rose][i],
                           pointerEvents: 'none',
                         }}
                       />
@@ -255,7 +300,7 @@ function App() {
         })}
       </div>
 
-      {/* ── Mobile Progress Bar ── */}
+      {/* Mobile Progress Bar */}
       <div
         className="md:hidden"
         style={{
@@ -271,9 +316,12 @@ function App() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontFamily: 'Caveat, cursive', fontSize: '18px', color: '#4A5568' }}>
-            Chapter {currentChapter} / 7
-          </span>
+          <div className="flex items-center gap-2">
+            <Award className="w-4 h-4" style={{ color: C.rose }} />
+            <span className="font-caveat text-lg" style={{ color: '#4A5568' }}>
+              {totalScore} / 100
+            </span>
+          </div>
           <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
             {chapters.map((chapter) => {
               const isUnlocked = unlockedChapters.includes(chapter.id);
@@ -299,7 +347,7 @@ function App() {
         </div>
       </div>
 
-      {/* ── Unlock Toast ── */}
+      {/* Unlock Toast */}
       <AnimatePresence>
         {showUnlockEffect && newlyUnlocked && (
           <motion.div
@@ -324,9 +372,20 @@ function App() {
             <motion.div
               animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
               transition={{ duration: 0.6 }}
-              style={{ fontSize: '56px', marginBottom: '12px', display: 'block' }}
+              className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+              style={{ background: C.rose }}
             >
-              {chapters[newlyUnlocked - 1]?.icon}
+              {chapters[newlyUnlocked - 1] && (
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1] }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {(() => {
+                    const Icon = chapters[newlyUnlocked - 1].icon;
+                    return <Icon size={28} color="white" />;
+                  })()}
+                </motion.div>
+              )}
             </motion.div>
             <p style={{ fontFamily: 'Caveat, cursive', fontSize: '24px', color: C.rose, margin: '0 0 4px' }}>
               Chapter {newlyUnlocked} Unlocked!
@@ -338,7 +397,7 @@ function App() {
         )}
       </AnimatePresence>
 
-      {/* ── Main Content ── */}
+      {/* Main Content */}
       <main style={{ paddingBottom: '80px' }} className="md:pb-0">
         {currentChapter >= 1 && (
           <motion.div
@@ -352,37 +411,57 @@ function App() {
 
         {currentChapter >= 2 && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <DoctorSection onComplete={handleChapterComplete} />
+            <DoctorSection
+              onComplete={handleChapterComplete}
+              updateScore={(points) => updateScore('doctor', points)}
+              doctorScore={scores.doctor}
+            />
           </motion.div>
         )}
 
         {currentChapter >= 3 && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <MovieSection onComplete={handleChapterComplete} />
+            <MovieSection
+              onComplete={handleChapterComplete}
+              updateScore={(points) => updateScore('movies', points)}
+              movieScore={scores.movies}
+            />
           </motion.div>
         )}
 
         {currentChapter >= 4 && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <MusicSection onComplete={handleChapterComplete} />
+            <MusicSection
+              onComplete={handleChapterComplete}
+              updateScore={(points) => updateScore('music', points)}
+              musicScore={scores.music}
+            />
           </motion.div>
         )}
 
         {currentChapter >= 5 && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <LittleThingsSection onComplete={handleChapterComplete} />
+            <LittleThingsSection
+              onComplete={handleChapterComplete}
+              updateScore={(points) => updateScore('personality', points)}
+              personalityScore={scores.personality}
+            />
           </motion.div>
         )}
 
         {currentChapter >= 6 && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <OpenLetterSection onComplete={handleChapterComplete} />
+            <OpenLetterSection
+              onComplete={handleChapterComplete}
+              updateScore={(points) => updateScore('discovery', points)}
+              discoveryScore={scores.discovery}
+            />
           </motion.div>
         )}
 
         {currentChapter >= 7 && (
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <GreetingCardSection />
+            <GreetingCardSection scores={scores} totalScore={totalScore} />
           </motion.div>
         )}
       </main>
@@ -390,6 +469,14 @@ function App() {
       <Footer />
       <Confetti show={showConfetti} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ChapterProvider>
+      <ScrapbookContent />
+    </ChapterProvider>
   );
 }
 
