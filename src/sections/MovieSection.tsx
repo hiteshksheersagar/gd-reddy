@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { Film, Ticket, Check, X, Award } from 'lucide-react';
+import { Film, Clapperboard, Check, X, Award, Star } from 'lucide-react';
 import { ScrollReveal } from '../components/ui/ScrollReveal';
 import { Confetti } from '../components/CelebrationEffects';
 
@@ -12,31 +12,98 @@ interface MovieSectionProps {
 
 const movieQuestions = [
   {
-    question: "Which movie features Krish and Ananya's intercultural love story?",
-    options: ["OK Jaanu", "2 States", "Sita Ramam", "Ye Maaya Chesave"],
+    question: "Which movie follows Krish and Ananya's intercultural love story?",
+    options: ["OK Jaanu", "2 States", "Orange", "Fidaa"],
     correct: 1,
+    movie: "2 States",
   },
   {
-    question: "Which movie follows Adi and Tara navigating a live-in relationship?",
-    options: ["Dear Comrade", "Dum Laga Ke Haisha", "OK Jaanu", "Geetha Govindam"],
-    correct: 2,
-  },
-  {
-    question: "Which Telugu romantic classic stars Naga Chaitanya and Samantha?",
-    options: ["Majili", "Orange", "Ye Maaya Chesave", "Fidaa"],
-    correct: 2,
-  },
-  {
-    question: "In which movie does Ram write letters to Sita?",
-    options: ["Hi Nanna", "Sita Ramam", "Love Story", "Majili"],
-    correct: 1,
-  },
-  {
-    question: "Which movie features Bhanumathi and Balakrishna?",
-    options: ["Fidaa", "Geetha Govindam", "Sita Ramam", "Orange"],
+    question: "Which movie follows Adi and Tara's live-in relationship?",
+    options: ["OK Jaanu", "Majili", "Geetha Govindam", "Orange"],
     correct: 0,
+    movie: "OK Jaanu",
+  },
+  {
+    question: "Which movie stars Naga Chaitanya and Samantha?",
+    options: ["Orange", "Majili", "Fidaa", "Bommarillu"],
+    correct: 1,
+    movie: "Majili",
+  },
+  {
+    question: "Which movie stars Ram Charan and Genelia?",
+    options: ["Orange", "Arya", "Fidaa", "Love Story"],
+    correct: 0,
+    movie: "Orange",
+  },
+  {
+    question: "Which movie features Bhanumathi and Varun?",
+    options: ["Fidaa", "Geetha Govindam", "OK Jaanu", "Majili"],
+    correct: 0,
+    movie: "Fidaa",
+  },
+  {
+    question: "Which movie stars Vijay Deverakonda and Rashmika?",
+    options: ["Orange", "Geetha Govindam", "Majili", "Dear Comrade"],
+    correct: 1,
+    movie: "Geetha Govindam",
+  },
+  {
+    question: "Which movie is famous for the song 'Rooba Rooba'?",
+    options: ["Fidaa", "Orange", "Majili", "Bommarillu"],
+    correct: 1,
+    movie: "Orange (Bonus)",
   },
 ];
+
+// Collectible movie ticket component
+function MovieTicket({ movie, index }: { movie: string; index: number }) {
+  return (
+    <motion.div
+      initial={{ scale: 0, rotate: -20 }}
+      animate={{ scale: 1, rotate: Math.random() * 10 - 5 }}
+      className="relative"
+      style={{ minWidth: '100px' }}
+    >
+      {/* Ticket body */}
+      <div
+        className="bg-white rounded-lg shadow-lg overflow-hidden"
+        style={{ border: '2px solid #C97B8A' }}
+      >
+        {/* Perforated top */}
+        <div className="h-2" style={{ background: 'linear-gradient(90deg, #C97B8A 50%, transparent 50%)', backgroundSize: '8px 100%' }} />
+
+        {/* Ticket content */}
+        <div className="p-3 text-center" style={{ background: '#FFFDFC' }}>
+          <div className="flex items-center justify-center gap-1 mb-1">
+            <Clapperboard className="w-3 h-3" style={{ color: '#C97B8A' }} />
+            <span className="font-inter text-xs font-semibold" style={{ color: '#1F2A44' }}>
+              TICKET #{index + 1}
+            </span>
+          </div>
+          <p className="font-sacramento text-sm font-bold" style={{ color: '#C97B8A' }}>
+            {movie}
+          </p>
+          <div className="flex justify-center gap-1 mt-1">
+            {[...Array(3)].map((_, i) => (
+              <Star key={i} className="w-2 h-2" style={{ color: '#C97B8A', fill: '#C97B8A' }} />
+            ))}
+          </div>
+        </div>
+
+        {/* Barcode */}
+        <div className="h-4 flex items-end justify-center gap-px pb-1" style={{ background: '#1F2A44' }}>
+          {[...Array(12)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-white"
+              style={{ width: '2px', height: `${Math.random() * 60 + 40}%` }}
+            />
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function MovieSection({ onComplete, updateScore, movieScore }: MovieSectionProps) {
   const [phase, setPhase] = useState<'intro' | 'quiz' | 'results' | 'complete'>('intro');
@@ -44,7 +111,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [collectedTickets, setCollectedTickets] = useState<number[]>([]);
+  const [collectedMovies, setCollectedMovies] = useState<string[]>([]);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const handleStartQuiz = () => {
@@ -61,7 +128,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
     if (correct) {
       setCorrectAnswers(prev => prev + 1);
       updateScore(5);
-      setCollectedTickets(prev => [...prev, currentQuestion]);
+      setCollectedMovies(prev => [...prev, movieQuestions[currentQuestion].movie]);
     }
 
     setTimeout(() => {
@@ -141,7 +208,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
             Romantic <span style={{ color: '#C97B8A' }}>Cinema</span> Challenge
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
-            Match the romantic movies to collect all tickets!
+            Match the romantic movies to collect all 7 tickets!
           </p>
         </ScrollReveal>
 
@@ -154,36 +221,21 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
           <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
             <Film className="w-5 h-5" style={{ color: '#C97B8A' }} />
             <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
-              Cinema Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{movieScore}</span> / 25
+              Cinema Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{movieScore}</span> / 35
             </span>
           </div>
         </motion.div>
 
         {/* Collected Tickets Display */}
-        <div className="flex justify-center gap-2 mb-12">
-          {movieQuestions.map((_, i) => (
-            <motion.div
-              key={i}
-              className="w-16 h-12 rounded-lg flex items-center justify-center border-2"
-              style={{
-                background: collectedTickets.includes(i) ? '#FFFDFC' : '#F4EDE6',
-                borderColor: collectedTickets.includes(i) ? '#C97B8A' : '#E6DDD4',
-                borderStyle: collectedTickets.includes(i) ? 'solid' : 'dashed',
-              }}
-              animate={collectedTickets.includes(i) ? { rotate: [-3, 3, -3] } : {}}
-              transition={{ duration: 0.3 }}
-            >
-              {collectedTickets.includes(i) && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="flex items-center gap-1"
-                >
-                  <Ticket className="w-4 h-4" style={{ color: '#C97B8A' }} />
-                </motion.div>
-              )}
-            </motion.div>
+        <div className="flex flex-wrap justify-center gap-3 mb-12 min-h-[80px]">
+          {collectedMovies.map((movie, i) => (
+            <MovieTicket key={`collected-${i}`} movie={movie} index={i} />
           ))}
+          {collectedMovies.length === 0 && (
+            <p className="font-caveat text-lg" style={{ color: '#9CA3AF' }}>
+              Answer correctly to collect movie tickets!
+            </p>
+          )}
         </div>
 
         <AnimatePresence mode="wait">
@@ -203,23 +255,24 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                       initial={{ rotate: -10 }}
                       animate={{ rotate: 0 }}
                       whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="w-20 h-12 rounded-lg shadow-md flex items-center justify-center relative overflow-hidden"
-                      style={{ background: '#FFFDFC' }}
+                      className="w-20 h-14 rounded-lg shadow-md flex flex-col items-center justify-center relative overflow-hidden"
+                      style={{ background: '#FFFDFC', border: `2px solid ${color}` }}
                     >
                       <div
-                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 w-3 h-6 rounded-full"
+                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 w-3 h-4 rounded-full"
                         style={{ background: `${color}40` }}
                       />
                       <div
-                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 w-3 h-6 rounded-full"
+                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 w-3 h-4 rounded-full"
                         style={{ background: `${color}40` }}
                       />
-                      <Ticket className="w-4 h-4" style={{ color }} />
+                      <Clapperboard className="w-4 h-4" style={{ color }} />
+                      <span className="font-inter text-xs mt-1" style={{ color: '#6B7280' }}>TICKET</span>
                     </motion.div>
                   ))}
                 </div>
                 <p className="font-caveat text-lg" style={{ color: '#6B7280' }}>
-                  Collect 5 movie tickets by answering correctly
+                  Collect 7 vintage cinema tickets by answering correctly
                 </p>
               </div>
 
@@ -319,40 +372,46 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, y: 20 }}
-              className="max-w-md mx-auto"
+              className="max-w-lg mx-auto"
             >
               <div
                 className="bg-white p-8 rounded-xl shadow-xl"
                 style={{ borderTop: '4px solid #C97B8A' }}
               >
-                <div className="flex items-center gap-2 mb-4 justify-center">
+                <div className="flex items-center gap-2 mb-6 justify-center">
                   <Award className="w-6 h-6" style={{ color: '#C97B8A' }} />
-                  <h3 className="font-playfair text-lg font-semibold" style={{ color: '#1F2A44' }}>
-                    Quiz Complete
+                  <h3 className="font-playfair text-xl font-semibold" style={{ color: '#1F2A44' }}>
+                    Cinema Collection Complete!
                   </h3>
                 </div>
 
+                {/* Collected Tickets Grid */}
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="bg-white rounded-xl p-6 shadow-lg mb-6"
-                  style={{ border: '2px dashed #E6DDD4' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-wrap justify-center gap-3 mb-6 p-4 rounded-lg"
+                  style={{ background: '#FAF6F1' }}
                 >
-                  <div className="flex justify-center gap-2 mb-4">
-                    {collectedTickets.map((_, i) => (
-                      <Ticket key={i} className="w-5 h-5" style={{ color: '#C97B8A' }} />
-                    ))}
-                  </div>
-                  <p className="font-caveat text-xl text-center mb-2" style={{ color: '#6B7280' }}>
-                    Cinema Score
+                  {collectedMovies.length > 0 ? (
+                    collectedMovies.map((movie, i) => (
+                      <MovieTicket key={`result-${i}`} movie={movie} index={i} />
+                    ))
+                  ) : (
+                    <p className="font-caveat text-lg" style={{ color: '#9CA3AF' }}>
+                      No tickets collected this time
+                    </p>
+                  )}
+                </motion.div>
+
+                <div className="text-center py-4 border-y-2 mb-6" style={{ borderColor: '#E6DDD4' }}>
+                  <p className="font-caveat text-xl mb-2" style={{ color: '#6B7280' }}>Cinema Score</p>
+                  <p className="font-playfair text-4xl font-bold" style={{ color: '#1F2A44' }}>
+                    {movieScore} / 35
                   </p>
-                  <p className="font-playfair text-4xl font-bold text-center" style={{ color: '#1F2A44' }}>
-                    {movieScore} / 25
-                  </p>
-                  <p className="font-caveat text-lg text-center mt-2" style={{ color: '#C97B8A' }}>
+                  <p className="font-caveat text-lg mt-2" style={{ color: '#C97B8A' }}>
                     {correctAnswers} correct out of {movieQuestions.length}
                   </p>
-                </motion.div>
+                </div>
 
                 <motion.button
                   initial={{ opacity: 0, y: 20 }}

@@ -1,26 +1,24 @@
 import { useState, useEffect, useCallback } from 'react';
 import './App.css';
-import Footer from './components/Footer';
 import HeroSection from './sections/HeroSection';
 import DoctorSection from './sections/DoctorSection';
 import MovieSection from './sections/MovieSection';
 import MusicSection from './sections/MusicSection';
 import LittleThingsSection from './sections/LittleThingsSection';
-import OpenLetterSection from './sections/OpenLetterSection';
 import GreetingCardSection from './sections/GreetingCardSection';
+import ClosingPage from './sections/ClosingPage';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Check, BookOpen, Stethoscope, Film, Music as MusicIcon, Sparkles, BookMarked, Cake, Award } from 'lucide-react';
+import { Lock, Check, BookOpen, Stethoscope, Film, Music as MusicIcon, Sparkles, Cake, Award } from 'lucide-react';
 import { Confetti } from './components/CelebrationEffects';
 import { ChapterProvider, useChapters } from './context/ChapterContext';
 
-// Updated color constants with better contrast
 const C = {
   cream: '#FAF6F1',
   blush: '#F5D6D6',
-  rose: '#C97B8A',       // Higher contrast rose
-  sage: '#A7C4A0',       // More saturated sage
-  lavender: '#B9AEDC',  // More saturated lavender
-  warm: '#E6B98D',      // Warm accent
+  rose: '#C97B8A',
+  sage: '#A7C4A0',
+  lavender: '#B9AEDC',
+  warm: '#E6B98D',
   beige: '#E9DFD2',
   navy: '#1F2A44',
   creamDark: '#F4EDE6',
@@ -35,8 +33,7 @@ const chapters = [
   { id: 3, title: 'Romantic Cinema Challenge', icon: Film },
   { id: 4, title: 'The Soundtrack of Her Life', icon: MusicIcon },
   { id: 5, title: 'Things That Feel Like Gayatri', icon: Sparkles },
-  { id: 6, title: 'Notes Found Between Pages', icon: BookMarked },
-  { id: 7, title: 'The Birthday Scrapbook', icon: Cake },
+  { id: 6, title: 'The Birthday Scrapbook', icon: Cake },
 ];
 
 function ScrapbookContent() {
@@ -54,7 +51,6 @@ function ScrapbookContent() {
   const [unlockingChapter, setUnlockingChapter] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  // Handle hash navigation on mount
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
@@ -65,35 +61,28 @@ function ScrapbookContent() {
     }
   }, []);
 
-  // Unlock chapter flow with proper animation sequence
   const handleUnlockChapter = useCallback((chapter: number) => {
-    // Step 1: Start unlock animation
     setUnlockingChapter(chapter);
     setShowUnlockModal(true);
     setShowConfetti(true);
 
-    // Step 2: Wait 2 seconds, then update state
-    const stateTimer = setTimeout(() => {
-      unlockChapter(chapter);
-      setCurrentChapter(chapter);
-    }, 2000);
+    unlockChapter(chapter);
+    setCurrentChapter(chapter);
 
-    // Step 3: Wait 4 seconds total, then close modal
     const modalTimer = setTimeout(() => {
       setShowUnlockModal(false);
       setUnlockingChapter(null);
       setShowConfetti(false);
-    }, 4000);
+    }, 1500);
 
     return () => {
-      clearTimeout(stateTimer);
       clearTimeout(modalTimer);
     };
   }, [unlockChapter, setCurrentChapter]);
 
   const handleChapterComplete = useCallback(() => {
     const nextChapter = currentChapter + 1;
-    if (nextChapter <= 7) {
+    if (nextChapter <= 6) {
       handleUnlockChapter(nextChapter);
     }
   }, [currentChapter, handleUnlockChapter]);
@@ -102,11 +91,10 @@ function ScrapbookContent() {
     handleUnlockChapter(2);
   }, [handleUnlockChapter]);
 
-  // Scroll to chapter when it changes
   useEffect(() => {
     if (currentChapter > 1) {
       const sectionId = [
-        'hero', 'doctor', 'movies', 'music', 'little-things', 'letter', 'greeting-card'
+        'hero', 'doctor', 'movies', 'music', 'little-things', 'greeting-card'
       ][currentChapter - 1];
       const element = document.getElementById(sectionId);
       if (element) {
@@ -138,15 +126,14 @@ function ScrapbookContent() {
             </span>
           </div>
           <p className="font-playfair text-3xl font-bold text-center" style={{ color: C.navy }}>
-            {totalScore} / 100
+            {totalScore} / 120
           </p>
           <div className="mt-3 pt-3 text-xs space-y-1" style={{ borderTop: '1px solid #E6DDD4' }}>
             {[
               { label: 'Doctor', score: scores.doctor, max: 20 },
-              { label: 'Cinema', score: scores.movies, max: 25 },
-              { label: 'Melody', score: scores.music, max: 25 },
+              { label: 'Cinema', score: scores.movies, max: 35 },
+              { label: 'Melody', score: scores.music, max: 50 },
               { label: 'Personality', score: scores.personality, max: 15 },
-              { label: 'Discovery', score: scores.discovery, max: 15 },
             ].map(item => (
               <div key={item.label} className="flex justify-between">
                 <span style={{ color: C.textSecondary }}>{item.label}</span>
@@ -173,7 +160,6 @@ function ScrapbookContent() {
           gap: '2px',
         }}
       >
-        {/* Spine line */}
         <div
           style={{
             position: 'absolute',
@@ -193,7 +179,6 @@ function ScrapbookContent() {
           const isUnlocking = unlockingChapter === chapter.id;
           const Icon = chapter.icon;
 
-          // Updated bookmark colors with better contrast
           const bookmarkBg = isCurrent
             ? C.rose
             : isComplete
@@ -249,7 +234,6 @@ function ScrapbookContent() {
                 )}
               </motion.button>
 
-              {/* Tooltip */}
               <div
                 className="opacity-0 group-hover:opacity-100 pointer-events-none"
                 style={{
@@ -276,11 +260,6 @@ function ScrapbookContent() {
                   <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '12px', fontWeight: 600, margin: 0 }}>
                     {chapter.title}
                   </p>
-                  {!isUnlocked && (
-                    <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', margin: '2px 0 0', opacity: 0.7 }}>
-                      Complete previous chapter to unlock
-                    </p>
-                  )}
                 </div>
                 <div
                   style={{
@@ -320,7 +299,7 @@ function ScrapbookContent() {
           <div className="flex items-center gap-2">
             <Award className="w-4 h-4" style={{ color: C.rose }} />
             <span className="font-caveat text-lg font-semibold" style={{ color: C.textPrimary }}>
-              {totalScore} / 100
+              {totalScore} / 120
             </span>
           </div>
           <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
@@ -478,27 +457,22 @@ function ScrapbookContent() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <OpenLetterSection
-              onComplete={handleChapterComplete}
-              updateScore={(points) => updateScore('discovery', points)}
-              discoveryScore={scores.discovery}
-            />
+            <GreetingCardSection scores={scores} totalScore={totalScore} />
           </motion.div>
         )}
 
-        {currentChapter >= 7 && (
+        {currentChapter >= 6 && (
           <motion.div
-            key="ch7"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            key="closing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <GreetingCardSection scores={scores} totalScore={totalScore} />
+            <ClosingPage />
           </motion.div>
         )}
       </main>
 
-      <Footer />
       <Confetti show={showConfetti} />
     </div>
   );

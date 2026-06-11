@@ -5,7 +5,6 @@ interface ChapterScores {
   movies: number;
   music: number;
   personality: number;
-  discovery: number;
 }
 
 interface ChapterContextType {
@@ -32,7 +31,6 @@ export function ChapterProvider({ children }: { children: ReactNode }) {
     movies: 0,
     music: 0,
     personality: 0,
-    discovery: 0,
   });
   const [title, setTitle] = useState<string | null>(null);
   const [completedActivities, setCompletedActivities] = useState<Record<string, boolean>>({});
@@ -57,10 +55,9 @@ export function ChapterProvider({ children }: { children: ReactNode }) {
   const getMaxScore = (category: keyof ChapterScores): number => {
     const maxScores: ChapterScores = {
       doctor: 20,
-      movies: 25,
-      music: 25,
+      movies: 35,
+      music: 50,
       personality: 15,
-      discovery: 15,
     };
     return maxScores[category];
   };

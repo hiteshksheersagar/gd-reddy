@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import {
   Gift, Heart, PartyPopper, Stethoscope, Film, Music, Sparkles,
-  BookMarked, Cake, BookOpen, Award, PenLine
+  Cake, BookOpen, Award, PenLine
 } from 'lucide-react';
 import { Confetti, Sparkles as SparklesEffect } from '../components/CelebrationEffects';
 import { FairyLights } from '../components/ui/FairyLights';
@@ -13,16 +13,15 @@ interface GreetingCardSectionProps {
     movies: number;
     music: number;
     personality: number;
-    discovery: number;
   };
   totalScore: number;
 }
 
 const titles = [
-  { min: 90, title: "The Main Character" },
-  { min: 75, title: "Dreamer & Healer" },
-  { min: 60, title: "Certified Movie Lover" },
-  { min: 40, title: "Story Collector" },
+  { min: 100, title: "The Main Character" },
+  { min: 85, title: "Dreamer & Healer" },
+  { min: 70, title: "Certified Movie Lover" },
+  { min: 50, title: "Story Collector" },
   { min: 0, title: "Heart Full of Music" },
 ];
 
@@ -65,13 +64,12 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
 
   const maxScores = {
     doctor: 20,
-    movies: 25,
-    music: 25,
+    movies: 35,
+    music: 50,
     personality: 15,
-    discovery: 15,
   };
 
-  const chapterIcons = [BookOpen, Stethoscope, Film, Music, Sparkles, BookMarked, Cake];
+  const chapterIcons = [BookOpen, Stethoscope, Film, Music, Sparkles, Cake];
 
   return (
     <section
@@ -318,7 +316,6 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                     { label: 'Cinema Score', score: scores.movies, max: maxScores.movies, icon: Film },
                     { label: 'Melody Score', score: scores.music, max: maxScores.music, icon: Music },
                     { label: 'Personality Score', score: scores.personality, max: maxScores.personality, icon: Sparkles },
-                    { label: 'Discovery Score', score: scores.discovery, max: maxScores.discovery, icon: BookMarked },
                   ].map((item, i) => (
                     <motion.div
                       key={item.label}
@@ -343,7 +340,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                 <div className="py-4 border-y-2 mb-4" style={{ borderColor: '#E6DDD4' }}>
                   <p className="font-caveat text-xl mb-2" style={{ color: '#6B7280' }}>Final Total</p>
                   <p className="font-playfair text-5xl font-bold" style={{ color: '#1F2A44' }}>
-                    {totalScore} / 100
+                    {totalScore} / 120
                   </p>
                 </div>
 
