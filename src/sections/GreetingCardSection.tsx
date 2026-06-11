@@ -87,11 +87,11 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
+          <p className="font-caveat text-xl mb-2" style={{ color: '#C97B8A' }}>
             FINAL CHAPTER
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl font-bold" style={{ color: '#1F2A44' }}>
-            The <span style={{ color: '#D8A7B1' }}>Birthday</span> Scrapbook
+            The <span style={{ color: '#C97B8A' }}>Birthday</span> Scrapbook
           </h2>
         </motion.div>
 
@@ -110,9 +110,9 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                 onClick={handleRibbonClick}
               >
                 {/* Gift box */}
-                <div className="w-64 h-64 md:w-80 md:h-80 rounded-2xl shadow-2xl relative" style={{ background: 'linear-gradient(135deg, #D8A7B1, #F5D6D6)' }}>
+                <div className="w-64 h-64 md:w-80 md:h-80 rounded-2xl shadow-2xl relative" style={{ background: 'linear-gradient(135deg, #C97B8A, #F5D6D6)' }}>
                   {/* Box lid */}
-                  <div className="absolute -top-4 left-0 right-0 h-8 rounded-t-xl" style={{ background: '#D8A7B1' }} />
+                  <div className="absolute -top-4 left-0 right-0 h-8 rounded-t-xl" style={{ background: '#C97B8A' }} />
 
                   {/* Horizontal ribbon */}
                   <div className="absolute top-1/2 left-0 right-0 h-12 -translate-y-1/2" style={{ background: '#D8D2F0' }} />
@@ -153,7 +153,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                 transition={{ duration: 0.5 }}
                 className="w-64 h-64 mx-auto flex items-center justify-center"
               >
-                <Gift className="w-24 h-24 animate-pulse" style={{ color: '#D8A7B1' }} />
+                <Gift className="w-24 h-24 animate-pulse" style={{ color: '#C97B8A' }} />
               </motion.div>
             </motion.div>
           )}
@@ -203,7 +203,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                           transition={{ delay: i * 0.1 }}
                           className="bg-white rounded-lg p-2 shadow-sm"
                         >
-                          <Icon className="w-6 h-6" style={{ color: '#D8A7B1' }} />
+                          <Icon className="w-6 h-6" style={{ color: '#C97B8A' }} />
                         </motion.div>
                       ))}
                     </div>
@@ -215,7 +215,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <Heart className="w-8 h-8 opacity-50" style={{ color: '#D8A7B1', fill: '#D8A7B1' }} />
+                    <Heart className="w-8 h-8 opacity-50" style={{ color: '#C97B8A', fill: '#C97B8A' }} />
                   </motion.div>
                 </div>
 
@@ -243,7 +243,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                     >
                       <div className="relative">
                         {/* Candle body */}
-                        <div className="w-8 h-20 rounded-t-sm mx-auto" style={{ background: 'linear-gradient(to bottom, #F8DCC8, #D8A7B1)' }} />
+                        <div className="w-8 h-20 rounded-t-sm mx-auto" style={{ background: 'linear-gradient(to bottom, #F8DCC8, #C97B8A)' }} />
 
                         {/* Flame */}
                         <motion.div
@@ -302,7 +302,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
                   className="w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center"
-                  style={{ background: '#D8A7B1' }}
+                  style={{ background: '#C97B8A' }}
                 >
                   <Award className="w-8 h-8 text-white" />
                 </motion.div>
@@ -329,7 +329,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                       style={{ background: '#FAF6F1' }}
                     >
                       <div className="flex items-center gap-2">
-                        <item.icon className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                        <item.icon className="w-5 h-5" style={{ color: '#C97B8A' }} />
                         <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>{item.label}</span>
                       </div>
                       <span className="font-playfair font-bold" style={{ color: '#1F2A44' }}>
@@ -392,7 +392,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                 transition={{ duration: 1, repeat: Infinity }}
                 className="mb-8"
               >
-                <PartyPopper className="w-16 h-16 mx-auto" style={{ color: '#D8A7B1' }} />
+                <PartyPopper className="w-16 h-16 mx-auto" style={{ color: '#C97B8A' }} />
               </motion.div>
 
               <motion.h2
@@ -402,7 +402,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                 style={{ color: '#1F2A44' }}
               >
                 Happy Birthday<br />
-                <span style={{ color: '#D8A7B1' }}>
+                <span style={{ color: '#C97B8A' }}>
                   Gayatri Devi Reddy!
                 </span>
               </motion.h2>
@@ -423,7 +423,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                 transition={{ delay: 1, type: 'spring' }}
                 className="space-y-4"
               >
-                <p className="font-sacramento text-3xl" style={{ color: '#D8A7B1' }}>
+                <p className="font-sacramento text-3xl" style={{ color: '#C97B8A' }}>
                   THE END
                 </p>
 
@@ -431,7 +431,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                   className="w-12 h-12 rounded-full mx-auto flex items-center justify-center"
-                  style={{ background: '#D8A7B1' }}
+                  style={{ background: '#C97B8A' }}
                 >
                   <Heart className="w-6 h-6 text-white" style={{ fill: 'white' }} />
                 </motion.div>
@@ -456,7 +456,7 @@ export default function GreetingCardSection({ scores, totalScore }: GreetingCard
                       className="w-10 h-10 rounded-lg flex items-center justify-center"
                       style={{ background: '#FAF6F1' }}
                     >
-                      <Icon className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                      <Icon className="w-5 h-5" style={{ color: '#C97B8A' }} />
                     </motion.div>
                   ))}
                 </motion.div>

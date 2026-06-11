@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import Footer from './components/Footer';
 import HeroSection from './sections/HeroSection';
@@ -9,25 +9,31 @@ import LittleThingsSection from './sections/LittleThingsSection';
 import OpenLetterSection from './sections/OpenLetterSection';
 import GreetingCardSection from './sections/GreetingCardSection';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Check, BookOpen, Stethoscope, Film, Music, Sparkles, BookMarked, Cake, Award } from 'lucide-react';
+import { Lock, Check, BookOpen, Stethoscope, Film, Music as MusicIcon, Sparkles, BookMarked, Cake, Award } from 'lucide-react';
 import { Confetti } from './components/CelebrationEffects';
 import { ChapterProvider, useChapters } from './context/ChapterContext';
 
+// Updated color constants with better contrast
 const C = {
   cream: '#FAF6F1',
   blush: '#F5D6D6',
-  rose: '#D8A7B1',
-  sage: '#C8DCC6',
-  lavender: '#D8D2F0',
+  rose: '#C97B8A',       // Higher contrast rose
+  sage: '#A7C4A0',       // More saturated sage
+  lavender: '#B9AEDC',  // More saturated lavender
+  warm: '#E6B98D',      // Warm accent
   beige: '#E9DFD2',
   navy: '#1F2A44',
+  creamDark: '#F4EDE6',
+  textPrimary: '#374151',
+  textSecondary: '#4B5563',
+  textMuted: '#6B7280',
 };
 
 const chapters = [
   { id: 1, title: 'The Story of Gayatri Devi Reddy', icon: BookOpen },
   { id: 2, title: 'The White Coat Chronicles', icon: Stethoscope },
   { id: 3, title: 'Romantic Cinema Challenge', icon: Film },
-  { id: 4, title: 'The Soundtrack of Her Life', icon: Music },
+  { id: 4, title: 'The Soundtrack of Her Life', icon: MusicIcon },
   { id: 5, title: 'Things That Feel Like Gayatri', icon: Sparkles },
   { id: 6, title: 'Notes Found Between Pages', icon: BookMarked },
   { id: 7, title: 'The Birthday Scrapbook', icon: Cake },
@@ -44,10 +50,11 @@ function ScrapbookContent() {
     getTotalScore,
   } = useChapters();
 
-  const [showUnlockEffect, setShowUnlockEffect] = useState(false);
-  const [newlyUnlocked, setNewlyUnlocked] = useState<number | null>(null);
+  const [showUnlockModal, setShowUnlockModal] = useState(false);
+  const [unlockingChapter, setUnlockingChapter] = useState<number | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
+  // Handle hash navigation on mount
   useEffect(() => {
     const hash = window.location.hash;
     if (hash) {
@@ -58,33 +65,57 @@ function ScrapbookContent() {
     }
   }, []);
 
-  const handleUnlockChapter = (chapter: number) => {
-    if (!unlockedChapters.includes(chapter) && chapter <= 7) {
-      setNewlyUnlocked(chapter);
-      setShowUnlockEffect(true);
-      setShowConfetti(true);
+  // Unlock chapter flow with proper animation sequence
+  const handleUnlockChapter = useCallback((chapter: number) => {
+    // Step 1: Start unlock animation
+    setUnlockingChapter(chapter);
+    setShowUnlockModal(true);
+    setShowConfetti(true);
 
-      setTimeout(() => {
-        unlockChapter(chapter);
-        setCurrentChapter(chapter);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 800);
+    // Step 2: Wait 2 seconds, then update state
+    const stateTimer = setTimeout(() => {
+      unlockChapter(chapter);
+      setCurrentChapter(chapter);
+    }, 2000);
 
-      setTimeout(() => {
-        setShowUnlockEffect(false);
-        setNewlyUnlocked(null);
-        setShowConfetti(false);
-      }, 3000);
+    // Step 3: Wait 4 seconds total, then close modal
+    const modalTimer = setTimeout(() => {
+      setShowUnlockModal(false);
+      setUnlockingChapter(null);
+      setShowConfetti(false);
+    }, 4000);
+
+    return () => {
+      clearTimeout(stateTimer);
+      clearTimeout(modalTimer);
+    };
+  }, [unlockChapter, setCurrentChapter]);
+
+  const handleChapterComplete = useCallback(() => {
+    const nextChapter = currentChapter + 1;
+    if (nextChapter <= 7) {
+      handleUnlockChapter(nextChapter);
     }
-  };
+  }, [currentChapter, handleUnlockChapter]);
 
-  const handleChapterComplete = () => {
-    handleUnlockChapter(currentChapter + 1);
-  };
-
-  const handleBeginJourney = () => {
+  const handleBeginJourney = useCallback(() => {
     handleUnlockChapter(2);
-  };
+  }, [handleUnlockChapter]);
+
+  // Scroll to chapter when it changes
+  useEffect(() => {
+    if (currentChapter > 1) {
+      const sectionId = [
+        'hero', 'doctor', 'movies', 'music', 'little-things', 'letter', 'greeting-card'
+      ][currentChapter - 1];
+      const element = document.getElementById(sectionId);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+  }, [currentChapter]);
 
   const totalScore = getTotalScore();
 
@@ -98,11 +129,11 @@ function ScrapbookContent() {
       >
         <div
           className="bg-white rounded-2xl shadow-xl p-4"
-          style={{ border: '3px solid #E6DDD4' }}
+          style={{ border: '3px solid #E6DDD4', backgroundColor: '#FFFDFC' }}
         >
           <div className="flex items-center gap-2 mb-3">
             <Award className="w-5 h-5" style={{ color: C.rose }} />
-            <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
+            <span className="font-caveat text-lg font-semibold" style={{ color: C.textPrimary }}>
               Current Score
             </span>
           </div>
@@ -118,8 +149,8 @@ function ScrapbookContent() {
               { label: 'Discovery', score: scores.discovery, max: 15 },
             ].map(item => (
               <div key={item.label} className="flex justify-between">
-                <span style={{ color: '#6B7280' }}>{item.label}</span>
-                <span className="font-medium" style={{ color: C.navy }}>
+                <span style={{ color: C.textSecondary }}>{item.label}</span>
+                <span className="font-semibold" style={{ color: C.navy }}>
                   {item.score}/{item.max}
                 </span>
               </div>
@@ -159,18 +190,19 @@ function ScrapbookContent() {
           const isUnlocked = unlockedChapters.includes(chapter.id);
           const isCurrent = currentChapter === chapter.id;
           const isComplete = isUnlocked && currentChapter > chapter.id;
-          const isJustUnlocked = newlyUnlocked === chapter.id;
+          const isUnlocking = unlockingChapter === chapter.id;
           const Icon = chapter.icon;
 
+          // Updated bookmark colors with better contrast
           const bookmarkBg = isCurrent
             ? C.rose
             : isComplete
             ? C.sage
-            : isJustUnlocked
+            : isUnlocking
             ? C.navy
             : isUnlocked
-            ? C.beige
-            : '#CBD5E0';
+            ? C.navy
+            : '#CBD5E1';
 
           return (
             <motion.div
@@ -184,7 +216,7 @@ function ScrapbookContent() {
               <motion.button
                 whileHover={{ x: -8 }}
                 transition={{ type: 'spring', stiffness: 300 }}
-                onClick={() => isUnlocked && setCurrentChapter(chapter.id)}
+                onClick={() => isUnlocked && !showUnlockModal && setCurrentChapter(chapter.id)}
                 style={{
                   position: 'relative',
                   width: '44px',
@@ -192,12 +224,12 @@ function ScrapbookContent() {
                   backgroundColor: bookmarkBg,
                   clipPath: 'polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%)',
                   boxShadow: isCurrent
-                    ? `0 4px 16px rgba(216, 167, 177, 0.6)`
-                    : '0 2px 8px rgba(0,0,0,0.12)',
+                    ? `0 4px 16px rgba(201, 123, 138, 0.6)`
+                    : '0 2px 8px rgba(0,0,0,0.15)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  cursor: isUnlocked ? 'pointer' : 'default',
+                  cursor: isUnlocked && !showUnlockModal ? 'pointer' : 'default',
                   border: 'none',
                   outline: 'none',
                   transition: 'background-color 0.3s ease',
@@ -207,13 +239,13 @@ function ScrapbookContent() {
                   <Check size={16} color="white" />
                 ) : isUnlocked ? (
                   <motion.div
-                    animate={isJustUnlocked ? { scale: [1, 1.4, 1] } : {}}
+                    animate={isUnlocking ? { scale: [1, 1.4, 1] } : {}}
                     transition={{ duration: 0.4 }}
                   >
-                    <Icon size={18} color={isJustUnlocked ? 'white' : C.navy} />
+                    <Icon size={18} color="white" />
                   </motion.div>
                 ) : (
-                  <Lock size={14} color="#9CA3AF" />
+                  <Lock size={14} color="#64748B" />
                 )}
               </motion.button>
 
@@ -231,21 +263,21 @@ function ScrapbookContent() {
               >
                 <div
                   style={{
-                    background: isCurrent ? C.rose : C.navy,
+                    background: C.navy,
                     color: C.cream,
                     padding: '8px 14px',
                     borderRadius: '10px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                   }}
                 >
-                  <p style={{ fontFamily: 'Caveat, cursive', fontSize: '13px', margin: 0, opacity: 0.8 }}>
+                  <p style={{ fontFamily: 'Caveat, cursive', fontSize: '13px', margin: 0, opacity: 0.9 }}>
                     Ch. {chapter.id}
                   </p>
                   <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '12px', fontWeight: 600, margin: 0 }}>
                     {chapter.title}
                   </p>
                   {!isUnlocked && (
-                    <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', margin: '2px 0 0', opacity: 0.6 }}>
+                    <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', margin: '2px 0 0', opacity: 0.7 }}>
                       Complete previous chapter to unlock
                     </p>
                   )}
@@ -260,41 +292,10 @@ function ScrapbookContent() {
                     height: 0,
                     borderTop: '6px solid transparent',
                     borderBottom: '6px solid transparent',
-                    borderLeft: `6px solid ${isCurrent ? C.rose : C.navy}`,
+                    borderLeft: `6px solid ${C.navy}`,
                   }}
                 />
               </div>
-
-              {/* Sparkle unlock effect */}
-              <AnimatePresence>
-                {isJustUnlocked && showUnlockEffect && (
-                  <>
-                    {[...Array(6)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
-                        animate={{
-                          scale: [0, 1, 0],
-                          x: Math.cos((i * 60 * Math.PI) / 180) * 24,
-                          y: Math.sin((i * 60 * Math.PI) / 180) * 24,
-                          opacity: [1, 1, 0],
-                        }}
-                        transition={{ duration: 0.6, delay: i * 0.05 }}
-                        style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          width: '6px',
-                          height: '6px',
-                          borderRadius: '50%',
-                          backgroundColor: [C.blush, C.rose, C.sage, C.lavender, '#F8DCC8', C.rose][i],
-                          pointerEvents: 'none',
-                        }}
-                      />
-                    ))}
-                  </>
-                )}
-              </AnimatePresence>
             </motion.div>
           );
         })}
@@ -309,16 +310,16 @@ function ScrapbookContent() {
           left: 0,
           right: 0,
           zIndex: 50,
-          background: 'rgba(255,255,255,0.96)',
+          background: 'rgba(255,255,255,0.98)',
           backdropFilter: 'blur(8px)',
-          borderTop: `2px solid ${C.blush}`,
+          borderTop: `2px solid ${C.rose}`,
           padding: '10px 20px',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="flex items-center gap-2">
             <Award className="w-4 h-4" style={{ color: C.rose }} />
-            <span className="font-caveat text-lg" style={{ color: '#4A5568' }}>
+            <span className="font-caveat text-lg font-semibold" style={{ color: C.textPrimary }}>
               {totalScore} / 100
             </span>
           </div>
@@ -335,10 +336,10 @@ function ScrapbookContent() {
                     width: isCurrent ? '20px' : '10px',
                     height: '10px',
                     borderRadius: '5px',
-                    backgroundColor: isCurrent ? C.rose : isComplete ? C.sage : isUnlocked ? C.beige : '#CBD5E0',
+                    backgroundColor: isCurrent ? C.rose : isComplete ? C.sage : isUnlocked ? C.navy : '#CBD5E1',
                     border: isCurrent ? `2px solid ${C.rose}` : '2px solid transparent',
                     transition: 'all 0.3s ease',
-                    boxShadow: isCurrent ? `0 0 8px ${C.rose}80` : 'none',
+                    boxShadow: isCurrent ? `0 0 8px rgba(201, 123, 138, 0.5)` : 'none',
                   }}
                 />
               );
@@ -347,10 +348,11 @@ function ScrapbookContent() {
         </div>
       </div>
 
-      {/* Unlock Toast */}
+      {/* Unlock Modal */}
       <AnimatePresence>
-        {showUnlockEffect && newlyUnlocked && (
+        {showUnlockModal && unlockingChapter && (
           <motion.div
+            key={`unlock-${unlockingChapter}`}
             initial={{ opacity: 0, scale: 0.8, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: -20 }}
@@ -360,38 +362,38 @@ function ScrapbookContent() {
               left: '50%',
               transform: 'translate(-50%, -50%)',
               zIndex: 60,
-              background: 'white',
+              background: '#FFFDFC',
               borderRadius: '20px',
-              padding: '32px 48px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+              padding: '40px 56px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
               textAlign: 'center',
               pointerEvents: 'none',
-              border: `3px solid ${C.blush}`,
+              border: `3px solid ${C.rose}`,
             }}
           >
             <motion.div
               animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
               transition={{ duration: 0.6 }}
-              className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+              className="w-20 h-20 rounded-full mx-auto mb-5 flex items-center justify-center"
               style={{ background: C.rose }}
             >
-              {chapters[newlyUnlocked - 1] && (
+              {chapters[unlockingChapter - 1] && (
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.4 }}
                 >
                   {(() => {
-                    const Icon = chapters[newlyUnlocked - 1].icon;
-                    return <Icon size={28} color="white" />;
+                    const Icon = chapters[unlockingChapter - 1].icon;
+                    return <Icon size={36} color="white" />;
                   })()}
                 </motion.div>
               )}
             </motion.div>
-            <p style={{ fontFamily: 'Caveat, cursive', fontSize: '24px', color: C.rose, margin: '0 0 4px' }}>
-              Chapter {newlyUnlocked} Unlocked!
+            <p style={{ fontFamily: 'Caveat, cursive', fontSize: '28px', color: C.rose, margin: '0 0 8px', fontWeight: 600 }}>
+              Chapter {unlockingChapter} Unlocked!
             </p>
-            <p style={{ fontFamily: 'Inter, sans-serif', fontSize: '14px', color: '#6B7280', margin: 0 }}>
-              {chapters[newlyUnlocked - 1]?.title}
+            <p style={{ fontFamily: 'Playfair Display, serif', fontSize: '18px', color: C.navy, margin: 0, fontWeight: 600 }}>
+              {chapters[unlockingChapter - 1]?.title}
             </p>
           </motion.div>
         )}
@@ -410,7 +412,12 @@ function ScrapbookContent() {
         )}
 
         {currentChapter >= 2 && (
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            key="ch2"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <DoctorSection
               onComplete={handleChapterComplete}
               updateScore={(points) => updateScore('doctor', points)}
@@ -420,7 +427,12 @@ function ScrapbookContent() {
         )}
 
         {currentChapter >= 3 && (
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            key="ch3"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <MovieSection
               onComplete={handleChapterComplete}
               updateScore={(points) => updateScore('movies', points)}
@@ -430,7 +442,12 @@ function ScrapbookContent() {
         )}
 
         {currentChapter >= 4 && (
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            key="ch4"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <MusicSection
               onComplete={handleChapterComplete}
               updateScore={(points) => updateScore('music', points)}
@@ -440,7 +457,12 @@ function ScrapbookContent() {
         )}
 
         {currentChapter >= 5 && (
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            key="ch5"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <LittleThingsSection
               onComplete={handleChapterComplete}
               updateScore={(points) => updateScore('personality', points)}
@@ -450,7 +472,12 @@ function ScrapbookContent() {
         )}
 
         {currentChapter >= 6 && (
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            key="ch6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <OpenLetterSection
               onComplete={handleChapterComplete}
               updateScore={(points) => updateScore('discovery', points)}
@@ -460,7 +487,12 @@ function ScrapbookContent() {
         )}
 
         {currentChapter >= 7 && (
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <motion.div
+            key="ch7"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <GreetingCardSection scores={scores} totalScore={totalScore} />
           </motion.div>
         )}

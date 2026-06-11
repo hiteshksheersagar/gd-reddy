@@ -92,14 +92,14 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
             className="inline-flex items-center justify-center p-4 rounded-full mb-6"
             style={{ background: '#C8DCC650' }}
           >
-            <Music className="w-10 h-10" style={{ color: '#D8A7B1' }} />
+            <Music className="w-10 h-10" style={{ color: '#C97B8A' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
+          <p className="font-caveat text-xl mb-2" style={{ color: '#C97B8A' }}>
             CHAPTER 4
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
-            The <span style={{ color: '#D8A7B1' }}>Soundtrack</span> of Her Life
+            The <span style={{ color: '#C97B8A' }}>Soundtrack</span> of Her Life
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
             Click on each vinyl to listen. Discover all 4 songs!
@@ -113,7 +113,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
           className="flex justify-center mb-8"
         >
           <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
-            <Music className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <Music className="w-5 h-5" style={{ color: '#C97B8A' }} />
             <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
               Melody Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{musicScore}</span> / 25
             </span>
@@ -208,7 +208,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                         <motion.div
                           key={i}
                           className="w-1 rounded-full"
-                          style={{ background: '#D8A7B1' }}
+                          style={{ background: '#C97B8A' }}
                           animate={{
                             height: [20, 40 + Math.random() * 30, 20],
                           }}
@@ -229,7 +229,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                     <p className="font-inter text-sm mb-2" style={{ color: '#6B7280' }}>
                       {songs[selectedSong].artist}
                     </p>
-                    <p className="font-caveat text-lg" style={{ color: '#D8A7B1' }}>
+                    <p className="font-caveat text-lg" style={{ color: '#C97B8A' }}>
                       Mood: {songs[selectedSong].mood}
                     </p>
                   </div>
@@ -240,7 +240,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setIsPlaying(!isPlaying)}
                       className="p-3 rounded-full text-white"
-                      style={{ background: '#D8A7B1' }}
+                      style={{ background: '#C97B8A' }}
                     >
                       {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
                     </motion.button>
@@ -273,7 +273,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
                             delay: i * 0.3,
                           }}
                           className="absolute"
-                          style={{ color: '#D8A7B160' }}
+                          style={{ color: '#C97B8A60' }}
                         >
                           <Icon className="w-5 h-5" />
                         </motion.div>
@@ -319,7 +319,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
             <div className="bg-white p-8 rounded-xl shadow-xl inline-block mb-6">
               <div className="flex justify-center gap-4 mb-4">
                 {songs.map((_, i) => (
-                  <Disc3 key={i} className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                  <Disc3 key={i} className="w-5 h-5" style={{ color: '#C97B8A' }} />
                 ))}
               </div>
               <p className="font-caveat text-2xl mb-2" style={{ color: '#6B7280' }}>Melody Score</p>
@@ -328,7 +328,7 @@ export default function MusicSection({ onComplete, updateScore, musicScore }: Mu
               </p>
             </div>
             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
-              <Music className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+              <Music className="w-5 h-5" style={{ color: '#C97B8A' }} />
               <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 4 Complete!</span>
             </div>
           </motion.div>

@@ -32,10 +32,11 @@ export default function HeroSection({ onBeginJourney }: HeroSectionProps) {
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-4 h-4 rounded-full bg-scrapbook-sage/40"
+            className="absolute w-4 h-4 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
+              backgroundColor: 'rgba(167, 196, 160, 0.4)',
             }}
             animate={{
               y: [0, -30, 0],
@@ -77,7 +78,8 @@ export default function HeroSection({ onBeginJourney }: HeroSectionProps) {
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
             <motion.p
-              className="font-caveat text-2xl md:text-3xl text-scrapbook-rose mb-2"
+              className="font-caveat text-2xl md:text-3xl mb-2"
+              style={{ color: '#C97B8A' }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -95,7 +97,10 @@ export default function HeroSection({ onBeginJourney }: HeroSectionProps) {
                 The Story of
               </motion.span>{' '}
               <motion.span
-                className="block bg-gradient-to-r from-scrapbook-rose via-scrapbook-sage to-scrapbook-lavender bg-clip-text text-transparent"
+                className="block bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: 'linear-gradient(to right, #D38B97, #BBAE8A, #A6C3A0, #C4B8E8)',
+                }}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 }}
@@ -126,14 +131,14 @@ export default function HeroSection({ onBeginJourney }: HeroSectionProps) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.9 }}
           >
-            <div className="w-16 h-px bg-gradient-to-r from-transparent to-scrapbook-rose" />
+            <div className="w-16 h-px" style={{ background: 'linear-gradient(to right, transparent, #C97B8A)' }} />
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <Heart className="w-6 h-6 text-scrapbook-rose fill-scrapbook-rose" />
+              <Heart className="w-6 h-6" style={{ color: '#C97B8A' }} fill="#C97B8A" />
             </motion.div>
-            <div className="w-16 h-px bg-gradient-to-l from-transparent to-scrapbook-rose" />
+            <div className="w-16 h-px" style={{ background: 'linear-gradient(to left, transparent, #C97B8A)' }} />
           </motion.div>
 
           {/* CTA */}

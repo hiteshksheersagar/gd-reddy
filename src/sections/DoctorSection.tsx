@@ -144,7 +144,7 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
             CHAPTER 2
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{ color: '#1F2A44' }}>
-            The <span style={{ color: '#D8A7B1' }}>White Coat</span> Chronicles
+            The <span style={{ color: '#C97B8A' }}>White Coat</span> Chronicles
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
             Let's test your medical knowledge, Doctor!
@@ -158,7 +158,7 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
           className="flex justify-center mb-8"
         >
           <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
-            <Stethoscope className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <Stethoscope className="w-5 h-5" style={{ color: '#C97B8A' }} />
             <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
               Doctor Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{doctorScore}</span> / 20
             </span>
@@ -185,9 +185,9 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.05, rotate: 2 }}
                     className="bg-white p-5 rounded-xl shadow-lg relative"
-                    style={{ borderLeft: '4px solid #D8A7B1' }}
+                    style={{ borderLeft: '4px solid #C97B8A' }}
                   >
-                    <stat.icon className="w-6 h-6 mb-2" style={{ color: '#D8A7B1' }} />
+                    <stat.icon className="w-6 h-6 mb-2" style={{ color: '#C97B8A' }} />
                     <p className="font-caveat text-sm" style={{ color: '#6B7280' }}>{stat.label}</p>
                     <p className="font-playfair text-xl font-bold" style={{ color: '#1F2A44' }}>{stat.value}</p>
                   </motion.div>
@@ -200,10 +200,10 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
                 className="bg-white p-6 rounded-xl shadow-xl max-w-md mx-auto mb-8"
-                style={{ borderTop: '4px solid #D8A7B1' }}
+                style={{ borderTop: '4px solid #C97B8A' }}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <ClipboardList className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                  <ClipboardList className="w-5 h-5" style={{ color: '#C97B8A' }} />
                   <h3 className="font-playfair text-lg font-semibold" style={{ color: '#1F2A44' }}>Prescription Note</h3>
                 </div>
                 <div className="space-y-2">
@@ -257,7 +257,7 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
                       flex: 1,
                       height: '6px',
                       borderRadius: '3px',
-                      background: i < currentQuestion ? '#C8DCC6' : i === currentQuestion ? '#D8A7B1' : '#E6DDD4',
+                      background: i < currentQuestion ? '#C8DCC6' : i === currentQuestion ? '#C97B8A' : '#E6DDD4',
                       transition: 'background 0.3s ease',
                     }}
                   />
@@ -273,7 +273,7 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
                   border: '3px solid #E6DDD4',
                 }}
               >
-                <p className="font-caveat text-lg text-center mb-2" style={{ color: '#D8A7B1' }}>
+                <p className="font-caveat text-lg text-center mb-2" style={{ color: '#C97B8A' }}>
                   Question {currentQuestion + 1} of {doctorQuestions.length}
                 </p>
 
@@ -315,10 +315,10 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
             >
               <div
                 className="bg-white p-8 rounded-xl shadow-xl relative"
-                style={{ borderTop: '4px solid #D8A7B1' }}
+                style={{ borderTop: '4px solid #C97B8A' }}
               >
                 <div className="flex items-center gap-2 mb-4">
-                  <Award className="w-6 h-6" style={{ color: '#D8A7B1' }} />
+                  <Award className="w-6 h-6" style={{ color: '#C97B8A' }} />
                   <h3 className="font-playfair text-lg font-semibold" style={{ color: '#1F2A44' }}>
                     Quiz Complete
                   </h3>
@@ -331,14 +331,14 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
                   <p className="font-playfair text-4xl font-bold" style={{ color: '#1F2A44' }}>
                     {doctorScore} / 20
                   </p>
-                  <p className="font-caveat text-lg mt-2" style={{ color: '#D8A7B1' }}>
+                  <p className="font-caveat text-lg mt-2" style={{ color: '#C97B8A' }}>
                     {correctAnswers} correct out of {doctorQuestions.length}
                   </p>
                 </div>
 
                 <div className="mb-6">
                   <div className="flex items-center gap-2 mb-3">
-                    <ClipboardList className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                    <ClipboardList className="w-5 h-5" style={{ color: '#C97B8A' }} />
                     <h4 className="font-playfair font-semibold" style={{ color: '#1F2A44' }}>Prescription Note</h4>
                   </div>
                   <div className="space-y-2">
@@ -392,7 +392,7 @@ export default function DoctorSection({ onComplete, updateScore, doctorScore }: 
               className="text-center"
             >
               <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
-                <Stethoscope className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                <Stethoscope className="w-5 h-5" style={{ color: '#C97B8A' }} />
                 <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 2 Complete!</span>
               </div>
             </motion.div>

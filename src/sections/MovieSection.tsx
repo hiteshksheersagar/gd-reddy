@@ -131,14 +131,14 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
             className="inline-flex items-center justify-center p-4 rounded-full mb-6"
             style={{ background: '#D8D2F050' }}
           >
-            <Film className="w-10 h-10" style={{ color: '#D8A7B1' }} />
+            <Film className="w-10 h-10" style={{ color: '#C97B8A' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
+          <p className="font-caveat text-xl mb-2" style={{ color: '#C97B8A' }}>
             CHAPTER 3
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
-            Romantic <span style={{ color: '#D8A7B1' }}>Cinema</span> Challenge
+            Romantic <span style={{ color: '#C97B8A' }}>Cinema</span> Challenge
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
             Match the romantic movies to collect all tickets!
@@ -152,7 +152,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
           className="flex justify-center mb-8"
         >
           <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
-            <Film className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <Film className="w-5 h-5" style={{ color: '#C97B8A' }} />
             <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
               Cinema Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{movieScore}</span> / 25
             </span>
@@ -167,7 +167,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
               className="w-16 h-12 rounded-lg flex items-center justify-center border-2"
               style={{
                 background: collectedTickets.includes(i) ? '#FFFDFC' : '#F4EDE6',
-                borderColor: collectedTickets.includes(i) ? '#D8A7B1' : '#E6DDD4',
+                borderColor: collectedTickets.includes(i) ? '#C97B8A' : '#E6DDD4',
                 borderStyle: collectedTickets.includes(i) ? 'solid' : 'dashed',
               }}
               animate={collectedTickets.includes(i) ? { rotate: [-3, 3, -3] } : {}}
@@ -179,7 +179,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                   animate={{ scale: 1 }}
                   className="flex items-center gap-1"
                 >
-                  <Ticket className="w-4 h-4" style={{ color: '#D8A7B1' }} />
+                  <Ticket className="w-4 h-4" style={{ color: '#C97B8A' }} />
                 </motion.div>
               )}
             </motion.div>
@@ -197,7 +197,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
             >
               <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md mx-auto mb-8">
                 <div className="flex justify-center gap-4 mb-4">
-                  {['#D8A7B1', '#C8DCC6', '#D8D2F0'].map((color, i) => (
+                  {['#C97B8A', '#C8DCC6', '#D8D2F0'].map((color, i) => (
                     <motion.div
                       key={i}
                       initial={{ rotate: -10 }}
@@ -265,7 +265,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                       flex: 1,
                       height: '6px',
                       borderRadius: '3px',
-                      background: i < currentQuestion ? '#C8DCC6' : i === currentQuestion ? '#D8A7B1' : '#E6DDD4',
+                      background: i < currentQuestion ? '#C8DCC6' : i === currentQuestion ? '#C97B8A' : '#E6DDD4',
                       transition: 'background 0.3s ease',
                     }}
                   />
@@ -281,7 +281,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                   border: '3px solid #E6DDD4',
                 }}
               >
-                <p className="font-caveat text-lg text-center mb-2" style={{ color: '#D8A7B1' }}>
+                <p className="font-caveat text-lg text-center mb-2" style={{ color: '#C97B8A' }}>
                   Question {currentQuestion + 1} of {movieQuestions.length}
                 </p>
 
@@ -323,10 +323,10 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
             >
               <div
                 className="bg-white p-8 rounded-xl shadow-xl"
-                style={{ borderTop: '4px solid #D8A7B1' }}
+                style={{ borderTop: '4px solid #C97B8A' }}
               >
                 <div className="flex items-center gap-2 mb-4 justify-center">
-                  <Award className="w-6 h-6" style={{ color: '#D8A7B1' }} />
+                  <Award className="w-6 h-6" style={{ color: '#C97B8A' }} />
                   <h3 className="font-playfair text-lg font-semibold" style={{ color: '#1F2A44' }}>
                     Quiz Complete
                   </h3>
@@ -340,7 +340,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                 >
                   <div className="flex justify-center gap-2 mb-4">
                     {collectedTickets.map((_, i) => (
-                      <Ticket key={i} className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                      <Ticket key={i} className="w-5 h-5" style={{ color: '#C97B8A' }} />
                     ))}
                   </div>
                   <p className="font-caveat text-xl text-center mb-2" style={{ color: '#6B7280' }}>
@@ -349,7 +349,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
                   <p className="font-playfair text-4xl font-bold text-center" style={{ color: '#1F2A44' }}>
                     {movieScore} / 25
                   </p>
-                  <p className="font-caveat text-lg text-center mt-2" style={{ color: '#D8A7B1' }}>
+                  <p className="font-caveat text-lg text-center mt-2" style={{ color: '#C97B8A' }}>
                     {correctAnswers} correct out of {movieQuestions.length}
                   </p>
                 </motion.div>
@@ -391,7 +391,7 @@ export default function MovieSection({ onComplete, updateScore, movieScore }: Mo
               className="text-center"
             >
               <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
-                <Film className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                <Film className="w-5 h-5" style={{ color: '#C97B8A' }} />
                 <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 3 Complete!</span>
               </div>
             </motion.div>

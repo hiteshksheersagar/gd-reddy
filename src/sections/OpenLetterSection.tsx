@@ -70,16 +70,16 @@ export default function OpenLetterSection({ onComplete, updateScore, discoverySc
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true }}
             className="inline-flex items-center justify-center p-4 rounded-full mb-6"
-            style={{ background: '#D8A7B130' }}
+            style={{ background: '#C97B8A30' }}
           >
-            <Search className="w-10 h-10" style={{ color: '#D8A7B1' }} />
+            <Search className="w-10 h-10" style={{ color: '#C97B8A' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
+          <p className="font-caveat text-xl mb-2" style={{ color: '#C97B8A' }}>
             CHAPTER 6
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
-            Notes Found <span style={{ color: '#D8A7B1' }}>Between Pages</span>
+            Notes Found <span style={{ color: '#C97B8A' }}>Between Pages</span>
           </h2>
           <p className="font-caveat text-xl md:text-2xl" style={{ color: '#6B7280' }}>
             Find at least 3 hidden notes scattered around!
@@ -93,7 +93,7 @@ export default function OpenLetterSection({ onComplete, updateScore, discoverySc
           className="flex justify-center mb-8"
         >
           <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
-            <BookMarked className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <BookMarked className="w-5 h-5" style={{ color: '#C97B8A' }} />
             <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
               Discovery Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{discoveryScore}</span> / 15
             </span>
@@ -118,7 +118,7 @@ export default function OpenLetterSection({ onComplete, updateScore, discoverySc
                   className="absolute"
                   style={{ left: `${note.x}%`, top: `${note.y}%` }}
                 >
-                  <div className="p-3 rounded-lg shadow-md" style={{ background: '#FAF6F1', borderLeft: '4px solid #D8A7B1' }}>
+                  <div className="p-3 rounded-lg shadow-md" style={{ background: '#FAF6F1', borderLeft: '4px solid #C97B8A' }}>
                     <p className="font-caveat text-lg" style={{ color: '#6B7280' }}>{note.text}</p>
                   </div>
                 </motion.div>
@@ -170,7 +170,7 @@ export default function OpenLetterSection({ onComplete, updateScore, discoverySc
             {/* Progress */}
             <div className="text-center mt-8">
               <div className="inline-flex items-center gap-4 bg-white px-6 py-3 rounded-full shadow-md">
-                <Heart className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+                <Heart className="w-5 h-5" style={{ color: '#C97B8A' }} />
                 <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>
                   Hidden notes found: {foundNotes.size} / {hiddenNotes.length} (need 3)
                 </span>
@@ -207,13 +207,13 @@ export default function OpenLetterSection({ onComplete, updateScore, discoverySc
                   );
                 })}
               </div>
-              <p className="font-caveat text-xl" style={{ color: '#D8A7B1' }}>
+              <p className="font-caveat text-xl" style={{ color: '#C97B8A' }}>
                 Discovery Score: {discoveryScore} / 15
               </p>
             </div>
 
             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
-              <Sparkles className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+              <Sparkles className="w-5 h-5" style={{ color: '#C97B8A' }} />
               <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 6 Complete!</span>
             </div>
           </motion.div>

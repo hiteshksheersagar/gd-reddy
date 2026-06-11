@@ -58,7 +58,7 @@ export function MovieTicket({
             </div>
             <div className="text-right">
               <p className="font-caveat text-sm text-scrapbook-rose">Admit One</p>
-              <Star className="w-4 h-4 inline" style={{ color: '#D8A7B1' }} />
+              <Star className="w-4 h-4 inline" style={{ color: '#C97B8A' }} />
             </div>
           </div>
         </div>

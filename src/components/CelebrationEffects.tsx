@@ -90,7 +90,7 @@ export function Sparkles({ show }: SparklesProps) {
               }}
               className="absolute"
             >
-              <SparklesIcon className="w-6 h-6" style={{ color: '#D8A7B1' }} />
+              <SparklesIcon className="w-6 h-6" style={{ color: '#C97B8A' }} />
             </motion.div>
           ))}
         </div>
@@ -159,7 +159,7 @@ export function FloatingHearts({ show }: FloatingHeartsProps) {
               }}
               className="absolute"
             >
-              <Heart className="w-8 h-8" style={{ color: '#D8A7B1', fill: '#D8A7B1' }} />
+              <Heart className="w-8 h-8" style={{ color: '#C97B8A', fill: '#C97B8A' }} />
             </motion.div>
           ))}
         </div>

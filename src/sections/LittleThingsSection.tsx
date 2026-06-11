@@ -67,14 +67,14 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
             className="inline-flex items-center justify-center p-4 rounded-full mb-6"
             style={{ background: '#F5D6D650' }}
           >
-            <Sparkles className="w-10 h-10" style={{ color: '#D8A7B1' }} />
+            <Sparkles className="w-10 h-10" style={{ color: '#C97B8A' }} />
           </motion.div>
 
-          <p className="font-caveat text-xl mb-2" style={{ color: '#D8A7B1' }}>
+          <p className="font-caveat text-xl mb-2" style={{ color: '#C97B8A' }}>
             CHAPTER 5
           </p>
           <h2 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: '#1F2A44' }}>
-            Things That Feel Like <span style={{ color: '#D8A7B1' }}>Gayatri</span>
+            Things That Feel Like <span style={{ color: '#C97B8A' }}>Gayatri</span>
           </h2>
           <p className="font-caveat text-xl md:text-2xl max-w-xl mx-auto" style={{ color: '#6B7280' }}>
             Select 5 things that describe you best
@@ -88,7 +88,7 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
           className="flex justify-center mb-8"
         >
           <div className="bg-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3">
-            <Sparkles className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+            <Sparkles className="w-5 h-5" style={{ color: '#C97B8A' }} />
             <span className="font-caveat text-lg" style={{ color: '#6B7280' }}>
               Personality Score: <span className="font-bold" style={{ color: '#1F2A44' }}>{personalityScore}</span> / 15
             </span>
@@ -118,15 +118,15 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
                       className="relative p-4 rounded-xl transition-all"
                       style={{
                         background: isSelected ? '#F5D6D630' : isDisabled ? '#F4EDE6' : '#FAF6F1',
-                        boxShadow: isSelected ? '0 4px 12px rgba(216, 167, 177, 0.3)' : 'none',
-                        border: `2px solid ${isSelected ? '#D8A7B1' : isDisabled ? '#E6DDD4' : '#E6DDD4'}`,
+                        boxShadow: isSelected ? '0 4px 12px rgba(201, 123, 138, 0.3)' : 'none',
+                        border: `2px solid ${isSelected ? '#C97B8A' : isDisabled ? '#E6DDD4' : '#E6DDD4'}`,
                         opacity: isDisabled ? 0.5 : 1,
                         cursor: isDisabled ? 'not-allowed' : 'pointer',
                       }}
                     >
                       <Icon
                         className="w-8 h-8 mx-auto mb-2"
-                        style={{ color: isSelected ? '#D8A7B1' : '#6B7280' }}
+                        style={{ color: isSelected ? '#C97B8A' : '#6B7280' }}
                       />
                       <span className="font-caveat text-sm block" style={{ color: '#2E3440' }}>{sticker.label}</span>
 
@@ -135,7 +135,7 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           className="absolute -top-2 -right-2 rounded-full p-1"
-                          style={{ background: '#D8A7B1' }}
+                          style={{ background: '#C97B8A' }}
                         >
                           <Check className="w-3 h-3 text-white" />
                         </motion.div>
@@ -161,7 +161,7 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
                   className="rounded-2xl p-6 shadow-xl mb-8"
                   style={{
                     background: '#FAF6F1',
-                    border: '2px dashed #D8A7B1',
+                    border: '2px dashed #C97B8A',
                   }}
                 >
                   <p className="font-caveat text-lg text-center mb-4" style={{ color: '#6B7280' }}>
@@ -179,7 +179,7 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
                           animate={{ scale: 1, rotate: Math.random() * 20 - 10 }}
                           className="bg-white px-4 py-3 rounded-lg shadow-md"
                         >
-                          <Icon className="w-6 h-6" style={{ color: '#D8A7B1' }} />
+                          <Icon className="w-6 h-6" style={{ color: '#C97B8A' }} />
                         </motion.div>
                       );
                     })}
@@ -233,17 +233,17 @@ export default function LittleThingsSection({ onComplete, updateScore, personali
                       transition={{ duration: 2, repeat: Infinity, delay: Math.random() * 2 }}
                       className="bg-white rounded-lg shadow-md p-3"
                     >
-                      <Icon className="w-8 h-8" style={{ color: '#D8A7B1' }} />
+                      <Icon className="w-8 h-8" style={{ color: '#C97B8A' }} />
                     </motion.div>
                   );
                 })}
               </div>
-              <p className="font-caveat text-xl" style={{ color: '#D8A7B1' }}>
+              <p className="font-caveat text-xl" style={{ color: '#C97B8A' }}>
                 Personality Score: {personalityScore} / 15
               </p>
             </div>
             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{ background: '#C8DCC650' }}>
-              <Sparkles className="w-5 h-5" style={{ color: '#D8A7B1' }} />
+              <Sparkles className="w-5 h-5" style={{ color: '#C97B8A' }} />
               <span className="font-caveat text-xl" style={{ color: '#6B7280' }}>Chapter 5 Complete!</span>
             </div>
           </motion.div>

@@ -58,14 +58,17 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
         // Scrapbook palette — names must exactly match usage in components
+        // Updated with higher contrast, more saturated colors
         scrapbook: {
           cream: '#FAF6F1',
           blush: '#F5D6D6',
-          rose: '#E8B4B8',
-          sage: '#D8E2D0',
-          lavender: '#E6E1F5',
+          rose: '#C97B8A',      // Higher contrast rose
+          sage: '#A7C4A0',      // More saturated sage
+          lavender: '#B9AEDC',  // More saturated lavender
           beige: '#E9DFD2',
           peach: '#F8DCC8',
+          warm: '#E6B98D',      // Warm accent
+          navy: '#1F2A44',      // Dark navy for text/buttons
         },
       },
       fontFamily: {
@@ -121,6 +124,8 @@ export default {
     'bg-scrapbook-lavender',
     'bg-scrapbook-beige',
     'bg-scrapbook-peach',
+    'bg-scrapbook-warm',
+    'bg-scrapbook-navy',
     'text-scrapbook-cream',
     'text-scrapbook-blush',
     'text-scrapbook-rose',
@@ -128,11 +133,13 @@ export default {
     'text-scrapbook-lavender',
     'text-scrapbook-beige',
     'text-scrapbook-peach',
+    'text-scrapbook-warm',
+    'text-scrapbook-navy',
     'border-scrapbook-rose',
     'border-scrapbook-sage',
     'border-scrapbook-blush',
     'fill-scrapbook-rose',
-    { pattern: /bg-scrapbook-(cream|blush|rose|sage|lavender|beige|peach)\/(10|20|30|40|50|60|70|80)/ },
-    { pattern: /text-scrapbook-(cream|blush|rose|sage|lavender|beige|peach)\/(10|20|30|40|50|60|70|80)/ },
+    { pattern: /bg-scrapbook-(cream|blush|rose|sage|lavender|beige|peach|warm|navy)\/(10|20|30|40|50|60|70|80)/ },
+    { pattern: /text-scrapbook-(cream|blush|rose|sage|lavender|beige|peach|warm|navy)\/(10|20|30|40|50|60|70|80)/ },
   ],
 };
